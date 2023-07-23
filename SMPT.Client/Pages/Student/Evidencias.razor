@@ -1,0 +1,109 @@
+﻿@page "/estudiante/{Code:int}"
+
+@using SMPT.Client.Models
+
+<MudCard Class="mb-4">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">Estudiante</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <div class="d-flex align-end justify-space-between mud-width-full">
+            <div class="d-flex flex-column">
+                <MudText><b>Nombre:</b> @model.Name</MudText>
+                <MudText Class="mt-1"><b>Curso:</b> @model.Course</MudText>
+                <MudText Class="mt-1"><b>Situación:</b> @model.State</MudText>
+                <MudText Class="mt-1"><b>Activo:</b> @model.Active.ToString()</MudText>
+            </div>
+        </div>
+        <MudDivider Class="mt-4" />
+        <MudText Typo="Typo.h6" Class="mt-4">Evidencias</MudText>
+        <MudTabs Elevation="1" Centered="true" Rounded="true" PanelClass="pa-6" ApplyEffectsToContainer AlwaysShowScrollButtons="true" Class="mt-3">
+            <MudTabPanel Text="Inglés">
+                <MudForm class="d-flex flex-column gap-4 w-50">
+                    <MudSelect Variant="Variant.Text" Label="Evaluación" Dense="true" Margin="Margin.Dense" T="int">
+                        <MudSelectItem Value="0">A1</MudSelectItem>
+                        <MudSelectItem Value="1">A2</MudSelectItem>
+                        <MudSelectItem Value="2">B1</MudSelectItem>
+                        <MudSelectItem Value="3">B2</MudSelectItem>
+                        <MudSelectItem Value="4">C1</MudSelectItem>
+                        <MudSelectItem Value="5">C2</MudSelectItem>
+                    </MudSelect>
+
+                    <MudButton Style="width:230px"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           Variant="Variant.Filled">
+                        <MudText Typo="Typo.button">Generar documento</MudText>
+                    </MudButton>
+                </MudForm>
+            </MudTabPanel>
+
+            <MudTabPanel Text="CENEVAL">
+
+            </MudTabPanel>
+
+            <MudTabPanel Text="Servicio social">
+                <MudForm class="d-flex flex-column gap-4 w-50">
+                    <MudSelect Variant="Variant.Text" Label="Estado" Dense="true" Margin="Margin.Dense" T="int" Class="mt-1">
+                        <MudSelectItem Value="1">Nueva</MudSelectItem>
+                        <MudSelectItem Value="2">Pendiente</MudSelectItem>
+                        <MudSelectItem Value="3">Aceptada</MudSelectItem>
+                        <MudSelectItem Value="4">Rechazada</MudSelectItem>
+                    </MudSelect>
+
+                    <MudTextField T="string" Label="Ovservaciones" Variant="Variant.Text" Text="@sampleText" Lines="3" Class="mt-2"/>
+
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadFile" Class="mt-2">
+                        <ButtonTemplate>
+                            <MudButton HtmlTag="label"
+                                        Variant="Variant.Filled"
+                                        Color="Color.Primary"
+                                        StartIcon="@Icons.Material.Filled.CloudUpload"
+                                        for="@context">
+                                Subir evidencia
+                            </MudButton>
+                        </ButtonTemplate>
+                        <SelectedTemplate>
+                            @if (context != null)
+                            {
+                                    <MudText Class="mt-2">@context.Name</MudText>
+                            }
+                            else
+                            {
+                                    <MudText Class="mt-2">No hay fichero</MudText>
+                            }
+                        </SelectedTemplate>
+                    </MudFileUpload>
+                </MudForm>
+            </MudTabPanel>
+            <MudTabPanel Text="Practica profesional">
+
+            </MudTabPanel>
+            <MudTabPanel Text="Taller">
+
+            </MudTabPanel>
+        </MudTabs>
+    </MudCardContent>
+    <MudCardActions Class="d-flex flex-row justify-content-end">
+        <MudButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Color="Color.Default" Class="mr-2">Cancelar</MudButton>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary">Guardar</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public int Code { get; set; }
+    Student model = new Student(1, "Maidelyn", "Piñero González", "2022B", "Egresado", true);
+    string sampleText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+    IBrowserFile file;
+
+    private void UploadFile(IBrowserFile file)
+    {
+        this.file = file;
+        //TODO upload the files to the server
+    }
+
+}

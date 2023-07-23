@@ -1,0 +1,83 @@
+@page "/theme"
+@using Core
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<MudGrid>
+    <MudItem xs="12" sm="6" md="4">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Menú lateral superior</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    @if (ModeSelected == DrawerClipMode.Never)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.ToggleOn" Color="Color.Success" OnClick="async() => await ChangeDrawerMode(DrawerClipMode.Always)"/>
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.ToggleOff" OnClick="async() => await ChangeDrawerMode(DrawerClipMode.Never)" />
+                    }
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>This day everything happend.</MudText>
+                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12" sm="6" md="4">
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">Menú lateral minima</MudText>
+                </CardHeaderContent>
+                <CardHeaderActions>
+                    @if (VariantSelected == DrawerVariant.Mini)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.ToggleOn" Color="Color.Success" OnClick="async() => await ChangeDrawerVariant(DrawerVariant.Responsive)" />
+                    }
+                    else
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.ToggleOff" OnClick="async() => await ChangeDrawerVariant(DrawerVariant.Mini)" />
+                    }
+                </CardHeaderActions>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText>This day everything happend.</MudText>
+                <MudText Typo="Typo.body2">The quick, brown fox jumps over a lazy dog.</MudText>
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private DrawerClipMode ModeSelected = DrawerClipMode.Never;
+    private DrawerVariant VariantSelected = DrawerVariant.Responsive;
+    private string[] ToggleIcons = { MudBlazor.Icons.Material.Filled.ToggleOn, MudBlazor.Icons.Material.Filled.ToggleOff };
+
+    [Inject]
+    public ComponentEvents? componentEvents { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ModeSelected = await localStorage.GetItemAsync<DrawerClipMode>("DrawerMode");
+        VariantSelected = await localStorage.GetItemAsync<DrawerVariant>("DrawerVariant");
+        componentEvents?.EventEmited(this, new StateArguments { State = ModeSelected });
+        componentEvents?.EventEmited(this, new StateArguments { State = VariantSelected });
+    }
+
+    public async Task ChangeDrawerMode(DrawerClipMode Mode)
+    {
+        ModeSelected = Mode;
+        await localStorage.SetItemAsync<DrawerClipMode>("DrawerMode", ModeSelected);
+        componentEvents?.EventEmited(this, new StateArguments { State = ModeSelected });
+    }
+    public async Task ChangeDrawerVariant(DrawerVariant Variant)
+    {
+        VariantSelected = Variant;
+        await localStorage.SetItemAsync<DrawerVariant>("DrawerVariant", VariantSelected);
+        componentEvents?.EventEmited(this, new StateArguments { State = VariantSelected });
+    }
+}

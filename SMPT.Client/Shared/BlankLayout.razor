@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+@using Core
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@*<MudGrid Justify="Justify.Center">
+    <MudItem xs="12" sm="8">
+        @Body
+    </MudItem>
+</MudGrid>*@
+
+@*<div class="d-flex">*@
+    @Body
+@*</div>*@
+
+@code {
+    private MudTheme _theme = new();
+    private bool _isDarkMode = false;
+
+    [Inject]
+    IJSRuntime? JSRuntime { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _isDarkMode = await localStorage.GetItemAsync<bool>("DarkMode").AsTask();
+            await updateThemeMode(_isDarkMode);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task updateThemeMode(bool isDark)
+    {
+        _isDarkMode = isDark;
+        if (JSRuntime != null)
+        {
+            await JSRuntime.InvokeVoidAsync("MyInterop.ChangeTheme", _isDarkMode);
+        }
+    }
+}

@@ -1,0 +1,165 @@
+﻿@inherits LayoutComponentBase
+
+@implements IDisposable
+
+@using Core;
+@using System.Text.Json;
+@using System.Text.Json.Nodes;
+
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject NavigationManager Navigation
+@inject HttpClient httpClient
+
+<MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+        <MudText Typo="Typo.h6" Class="px-4">SMPT CUValles</MudText>
+
+        <MudSpacer />
+
+        <MudSwitch Color="Color.Primary" Class="ma-0 mr-n2" T="bool" Checked="@_isDarkMode"
+            ThumbIcon="@(_isDarkMode == true ? @Icons.Material.Filled.DarkMode : @Icons.Material.Filled.LightMode)"
+            CheckedChanged="@((e) => ToggleMode(e))"/>
+
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
+            <MudMenuItem IconSize="Size.Small" Icon="@Icons.Material.Filled.Person" Edge="Edge.Start" Class="item-icon-width">Cuenta</MudMenuItem>
+            <MudMenuItem Href="/theme" IconSize="Size.Small" Icon="@Icons.Material.Filled.DisplaySettings">Tema</MudMenuItem>
+            <MudMenuItem IconSize="Size.Small" Icon="@Icons.Material.Filled.Logout" OnClick="logout">Cerrar sesión</MudMenuItem>
+        </MudMenu>
+    </MudAppBar>
+
+    <MudDrawer OpenMiniOnHover="false" @bind-Open="@_drawerOpen" ClipMode="Mode" Variant="Variant" Elevation="2">
+        <NavMenu/>
+    </MudDrawer>
+
+    <MudMainContent>
+        <MudContainer Class="mt-8 px-8" MaxWidth="MaxWidth.False">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code {
+    private JsonObject userLogged { get; set; }
+    private MudTheme _theme = new();
+    private bool _isDarkMode = false;
+    private bool _drawerOpen = true;
+    private DrawerClipMode Mode = DrawerClipMode.Never;
+    private DrawerVariant Variant = DrawerVariant.Responsive;
+
+    [Inject]
+    public ComponentEvents? componentEvents { get; set; }
+
+    [Inject]
+    IJSRuntime? JSRuntime { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string user = await localStorage.GetItemAsync<string>("user");
+        if (string.IsNullOrWhiteSpace(user))
+            Navigation.NavigateTo("/login");
+        else
+            userLogged = JsonSerializer.Deserialize<JsonObject>(user);
+
+        if (componentEvents != null)
+        {
+            componentEvents.Event += EventHandler;
+        }
+        var tasks = new Task[]
+        {
+            Task.Run(async() => _isDarkMode = await localStorage.GetItemAsync<bool>("DarkMode").AsTask()),
+            Task.Run(async() => Mode = await localStorage.GetItemAsync<DrawerClipMode>("DrawerMode").AsTask()),
+            Task.Run(async() => Variant = await localStorage.GetItemAsync<DrawerVariant>("DrawerVariant").AsTask())
+        };
+        try
+        {
+            await Task.WhenAll(tasks);
+            await ToggleMode(_isDarkMode);
+            UpdateDrawerMode(Mode);
+            UpdateDrawerVariant(Variant);
+        }
+        catch (Exception ex)
+        {
+            System.Console.WriteLine(ex.Message);
+        }
+    }
+    public void Dispose()
+    {
+        if (componentEvents != null)
+        {
+            componentEvents.Event -= EventHandler;
+        }
+    }
+    public void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+    public void EventHandler(object sender, StateArguments args)
+    {
+        if (args.State is DrawerClipMode)
+        {
+            UpdateDrawerMode((DrawerClipMode)args.State);
+        }
+        else if (args.State is DrawerVariant)
+        {
+            UpdateDrawerVariant((DrawerVariant)args.State);
+        }
+    }
+    public async void logout()
+    {
+        await localStorage.RemoveItemAsync("user");
+        Navigation.NavigateTo("/login");
+    }
+
+    public void UpdateDrawerVariant(DrawerVariant VariantType)
+    {
+        switch(VariantType)
+        {
+            case DrawerVariant.Mini:
+                Variant = DrawerVariant.Mini;
+                break;
+            default:
+                Variant = DrawerVariant.Responsive;
+                break;
+        }
+        _drawerOpen = true;
+        StateHasChanged();
+    }
+    public void UpdateDrawerMode(DrawerClipMode modeType)
+    {
+        switch(modeType)
+        {
+            case DrawerClipMode.Never:
+                Mode = DrawerClipMode.Never;
+                break;
+            default:
+                Mode = DrawerClipMode.Always;
+                break;
+        }
+        StateHasChanged();
+    }
+    private async Task ToggleMode(bool isDark)
+    {
+        _isDarkMode = isDark;
+        if (JSRuntime != null)
+        {
+            var tasks = new Task[]
+            {
+                Task.Run(async() => await JSRuntime.InvokeVoidAsync("MyInterop.ChangeTheme", _isDarkMode)),
+                Task.Run(async() => await localStorage.SetItemAsync<bool>("DarkMode", _isDarkMode))
+            };
+            try
+            {
+                await Task.WhenAll(tasks);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine(ex.Message);
+            }
+        }
+    }
+}
