@@ -6,8 +6,6 @@ using SMPT.Server.Controllers;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
-using Microsoft.AspNetCore.Cors;
-using System.Net;
 
 namespace SMPT.Server.Controllers
 {

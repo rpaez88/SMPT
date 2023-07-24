@@ -1,0 +1,33 @@
+﻿@page "/cuenta"
+
+@using SMPT.Client.Services;
+@using System.Text.Json.Nodes;
+
+@inject ILoginService loginService;
+
+<MudCard>
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">The Story Book</MudText>
+        </CardHeaderContent>
+        <CardHeaderActions>
+            <MudIconButton Icon="@Icons.Material.Filled.Settings" Color="Color.Default" />
+        </CardHeaderActions>
+    </MudCardHeader>
+    <MudCardContent>
+        <div class="d-flex felx-row flex-grow-1 gap-2">
+            <MudText>Nombre:</MudText>
+            <MudText Typo="Typo.body2">@User["nombre"]</MudText>
+        </div>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Text" Color="Color.Primary">Read More</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+
+    public JsonObject User = new JsonObject{};
+
+    protected override async Task OnInitializedAsync() => User = loginService.GetUser();
+}

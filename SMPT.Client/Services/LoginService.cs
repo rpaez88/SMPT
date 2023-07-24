@@ -11,6 +11,8 @@ namespace SMPT.Client.Services
     {
         private readonly HttpClient _http;
 
+        public JsonObject User { get; set; }
+
         public LoginService(HttpClient http)
         {
             _http = http ?? throw new ArgumentNullException(nameof(http));
@@ -24,9 +26,17 @@ namespace SMPT.Client.Services
             var resp = await result.Content.ReadFromJsonAsync<CustomResponse<JsonObject?>>();
 
             if (resp != null && resp.StatusCode == (int)HttpStatusCode.OK)
+            {
+                User = resp?.Value;
                 return resp?.Value;
+            }
             else
                 throw new Exception(resp?.Message);
+        }
+
+        public JsonObject GetUser()
+        {
+            return User;
         }
     }
 }
