@@ -6,6 +6,7 @@ using SMPT.Server.Controllers;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
+using Microsoft.Extensions.Configuration;
 
 namespace SMPT.Server.Controllers
 {
@@ -14,11 +15,15 @@ namespace SMPT.Server.Controllers
     public class LoginController : ControllerBase
     {
         private static readonly HttpClient client = new HttpClient();
+        private static IConfiguration? Configuration;
         private readonly ILogger<LoginController> _logger;
 
         public LoginController(ILogger<LoginController> logger)
         {
             _logger = logger;
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            Configuration = builder.Build();
         }
 
 
@@ -40,11 +45,12 @@ namespace SMPT.Server.Controllers
         [HttpPost]
         public async Task<CustomResponse<JsonObject>> Post([FromBody] SiiauCredentialsDTO credentials)
         {
-            var respApi = new CustomResponse<JsonObject>();
-
-            respApi.StatusCode = (int)HttpStatusCode.BadRequest;
-            respApi.Message = "Provided credentials error";
-            respApi.Value = null;
+            var respApi = new CustomResponse<JsonObject>
+            {
+                StatusCode = (int)HttpStatusCode.BadRequest,
+                Message = "Provided credentials error",
+                Value = null
+            };
 
             if (credentials != null)
             {
@@ -52,7 +58,7 @@ namespace SMPT.Server.Controllers
                 {
                     if (client.BaseAddress == null)
                     {
-                        client.BaseAddress = new Uri("http://148.202.89.11/d_alum/api/");
+                        client.BaseAddress = new Uri(Configuration?.GetValue<string>("SiiauAuthServer") ?? "http://148.202.89.11/d_alum/apiii/"); //"http://148.202.89.11/d_alum/api/");
                     }
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -65,20 +71,20 @@ namespace SMPT.Server.Controllers
                         if (content != null && !content.ContainsKey("respuesta"))
                         {
                             respApi.StatusCode = (int)HttpStatusCode.OK;
-                            respApi.Message = "Login success";
+                            respApi.Message = "Inicio de sesión exitoso";
                             respApi.Value = content;
                         }
                         else
                         {
                             respApi.StatusCode = (int)HttpStatusCode.NotFound;
-                            respApi.Message = "Login fail";
+                            respApi.Message = "Credenciales incorrectas";
                             respApi.Value = content;
                         }
                     }
                     else
                     {
                         respApi.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
-                        respApi.Message = "CUValles auth server error";
+                        respApi.Message = "El servidor de autenticación no está disponible";
                         respApi.Value = null;
                     }
                 }
