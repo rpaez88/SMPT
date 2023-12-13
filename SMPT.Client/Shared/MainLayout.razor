@@ -59,11 +59,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string user = await localStorage.GetItemAsync<string>("user");
-        if (string.IsNullOrWhiteSpace(user))
+        //string user = await localStorage.GetItemAsync<string>("user");
+        //if (string.IsNullOrWhiteSpace(user))
+        //    Navigation.NavigateTo("/login");
+        //else
+        //    userLogged = JsonSerializer.Deserialize<JsonObject>(user);
+        string token = await localStorage.GetItemAsync<string>("smpt-token");
+        if (string.IsNullOrWhiteSpace(token))
             Navigation.NavigateTo("/login");
-        else
-            userLogged = JsonSerializer.Deserialize<JsonObject>(user);
 
         if (componentEvents != null)
         {

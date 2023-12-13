@@ -32,7 +32,7 @@
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
                 <MudIconButton Icon="@Icons.Material.Filled.EditNote" Class="mr-1"
-                    OnClick="async() => await Evidencias(context?.Item?.Code)"
+                    OnClick="() => Evidencias(context?.Item?.Code)"
                     Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">
                 </MudIconButton>
                 <MudIconButton Icon="@Icons.Material.Filled.DisabledVisible"
@@ -155,7 +155,7 @@
         _loading = false;
     }
 
-    public async Task Evidencias(int? Code)
+    void Evidencias(int? Code)
     {
         if (Code != null)
             Navigation.NavigateTo("estudiante/" + Code);

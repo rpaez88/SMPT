@@ -103,10 +103,10 @@
             isError = false;
             try
             {
-                var user = await loginService.Login(int.Parse(Code), Password);
-                if (user != null)
+                var token = await loginService.Login(int.Parse(Code), Password);
+                if (token != null)
                 {
-                    await localStorage.SetItemAsStringAsync("user", user.ToJsonString());
+                    await localStorage.SetItemAsStringAsync("smpt-token", token);
                     Navigation.NavigateTo("/");
                 }
                 else

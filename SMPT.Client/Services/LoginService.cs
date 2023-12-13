@@ -12,22 +12,25 @@ namespace SMPT.Client.Services
         private readonly HttpClient _http;
 
         public JsonObject User { get; set; }
+        public string Jwt { get; set; }
 
         public LoginService(HttpClient http)
         {
             _http = http ?? throw new ArgumentNullException(nameof(http));
+            User = new JsonObject();
+            Jwt = string.Empty;
         }
 
-        public async Task<JsonObject?> Login(int code, string password)
+        public async Task<string?> Login(int code, string password)
         {
             var credentials = new SiiauCredentialsDTO { codigo = code, pass = password };
 
             var result = await _http.PostAsJsonAsync("api/login", credentials);
-            var resp = await result.Content.ReadFromJsonAsync<CustomResponse<JsonObject?>>();
+            var resp = await result.Content.ReadFromJsonAsync<CustomResponse<string?>>();
 
             if (resp != null && resp.StatusCode == (int)HttpStatusCode.OK)
             {
-                User = resp?.Value;
+                Jwt = resp?.Value!;
                 return resp?.Value;
             }
             else

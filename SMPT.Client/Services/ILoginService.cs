@@ -4,7 +4,7 @@ namespace SMPT.Client.Services
 {
     public interface ILoginService
     {
-        Task<JsonObject?> Login(int code, string password);
+        Task<string?> Login(int code, string password);
         JsonObject GetUser();
     }
 }

@@ -32,7 +32,6 @@ builder.Services.AddCors(options =>
         policy =>
         {
             policy.WithOrigins(builder.Configuration["AllowedHosts"]!).AllowAnyMethod().AllowAnyHeader();
-            //policy.WithOrigins("http://localhost:5206").AllowAnyMethod().AllowAnyHeader();
         });
 });
 
