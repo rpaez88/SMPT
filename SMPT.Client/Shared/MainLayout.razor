@@ -114,7 +114,7 @@
     }
     public async void logout()
     {
-        await localStorage.RemoveItemAsync("user");
+        await localStorage.RemoveItemAsync("smpt-token");
         Navigation.NavigateTo("/login");
     }
 

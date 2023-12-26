@@ -19,17 +19,18 @@ namespace SMPT.Server.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private static readonly HttpClient client = new HttpClient();
-        private static IConfiguration? Configuration;
+        private readonly HttpClient _http;
+        private readonly IConfiguration _config;
         private readonly ILogger<LoginController> _logger;
 
-        public LoginController(ILogger<LoginController> logger, IConfiguration configuration)
+        public LoginController(ILogger<LoginController> logger, IConfiguration config, HttpClient http)
         {
             _logger = logger;
             //var builder = new ConfigurationBuilder()
             //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             //Configuration = builder.Build();
-            Configuration = configuration;
+            _config = config;
+            _http = http;
         }
 
         [HttpGet]
@@ -58,14 +59,14 @@ namespace SMPT.Server.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(credentials.pass))
                 {
-                    if (client.BaseAddress == null)
+                    if (_http.BaseAddress == null)
                     {
-                        client.BaseAddress = new Uri(Configuration?.GetValue<string>("SiiauAuthServer") ?? "http://148.202.89.11/d_alum/api/");
+                        _http.BaseAddress = new Uri(_config.GetValue<string>("SiiauAuthServer") ?? "http://148.202.89.11/d_alum/api/");
                     }
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    _http.DefaultRequestHeaders.Accept.Clear();
+                    _http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    HttpResponseMessage resp = await client.PostAsJsonAsync("siiau-validate", credentials);
+                    HttpResponseMessage resp = await _http.PostAsJsonAsync("siiau-validate", credentials);
                     var content = await resp.Content.ReadFromJsonAsync<JsonObject>();
                     if (resp.StatusCode == HttpStatusCode.OK)
                     {
@@ -106,9 +107,9 @@ namespace SMPT.Server.Controllers
             return user;
         }
 
-        private static JwtSecurityToken CreateJWT(User UserFromDataBase)
+        private JwtSecurityToken CreateJWT(User UserFromDataBase)
         {
-            var jwt = Configuration!.GetSection("JWT").Get<Jwt>();
+            var jwt = _config.GetSection("JWT").Get<Jwt>();
 
             var claims = new[]
             {

@@ -57,6 +57,8 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddSingleton(new HttpClient());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
