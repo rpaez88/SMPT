@@ -26,28 +26,24 @@ namespace SMPT.Server.Controllers
         public LoginController(ILogger<LoginController> logger, IConfiguration configuration)
         {
             _logger = logger;
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            //var builder = new ConfigurationBuilder()
+            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
             //Configuration = builder.Build();
             Configuration = configuration;
         }
 
-
-        // GET: api/<LoginController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<LoginController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<LoginController>
         [HttpPost]
         public async Task<CustomResponse<string>> Post([FromBody] SiiauCredentialsDTO credentials)
         {

@@ -37,9 +37,5 @@ namespace SMPT.Client.Services
                 throw new Exception(resp?.Message);
         }
 
-        public JsonObject GetUser()
-        {
-            return User;
-        }
     }
 }

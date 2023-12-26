@@ -17,7 +17,7 @@
     <MudCardContent>
         <div class="d-flex felx-row flex-grow-1 gap-2">
             <MudText>Nombre:</MudText>
-            <MudText>@User["nombre"]</MudText>
+            @*<MudText>@User["nombre"]</MudText>*@
         </div>
     </MudCardContent>
     <MudCardActions>
@@ -27,7 +27,7 @@
 
 @code {
 
-    public JsonObject User = new JsonObject{};
+    //public JsonObject User = new JsonObject{};
 
-    protected override async Task OnInitializedAsync() => User = loginService.GetUser();
+    //protected override async Task OnInitializedAsync() => User = loginService.;
 }
