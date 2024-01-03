@@ -10,19 +10,19 @@
 
 <div class="d-flex flex-row">
     <div class="d-none d-md-flex flex-column justify-content-center align-center bg-login vh-100 w-50">
-        <MudText Typo="Typo.h3" Align="Align.Center" Style="color: #eee">SMPT CUValles</MudText>
-        <MudText Typo="Typo.h6" Align="Align.Center" Style="color: #c9c9c9" Class="w-75">Sistema para la mejora de procesos de titulacón</MudText>
+        <MudText Typo="Typo.h3" Align="Align.Center" Style="color: #fff">SMPT CUValles</MudText>
+        <MudText Typo="Typo.h6" Align="Align.Center" Style="color: #eee" Class="w-75">Sistema para la mejora de procesos de titulacón</MudText>
         <MudImage ObjectFit="ObjectFit.Cover" Width="480" Src="image/login/desktop-mobile.svg" Alt="Logo" Class="mt-4" />
     </div>
     <div class="d-flex flex-column justify-content-center align-center vh-100 w-login">
-        <h3><MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Large" Class="mr-2"></MudIcon>SMPT CUValles</h3>
-        @*<MudImage ObjectFit="ObjectFit.Cover" Height="55" Width="370" Src="image/login/logo.png" Alt="Logo" Elevation="25" Class="rounded-lg" />*@
+        @* <h3><MudIcon Icon="@Icons.Material.Filled.School" Size="Size.Large" Class="mr-2"></MudIcon>SMPT CUValles</h3> *@
+        <MudImage ObjectFit="ObjectFit.Cover" Height="250" Width="270" Src="image/logo-login.png" Alt="Logo" />
         
-        <form action="" class="d-flex flex-column align-center w-50">
+        <form action="" class="d-flex flex-column align-center w-login-form">
             <div class="w-100">
                 <MudTextField @bind-Value="Code" 
                     Label="Código"
-                    Variant="Variant.Filled"
+                    Variant="Variant.Outlined"
                     Disabled="@_processing"
                     InputType="InputType.Text"
                     Required="true"
@@ -31,7 +31,7 @@
             <div class="w-100 mt-2">
                 <MudTextField @bind-Value="Password"
                     Label="Contraseña"
-                    Variant="Variant.Filled"
+                    Variant="Variant.Outlined"
                     Disabled="@_processing"
                     InputType="@PasswordInput"
                     Adornment="Adornment.End"

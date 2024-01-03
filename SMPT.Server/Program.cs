@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Cors.Infrastructure;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +58,7 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddSingleton(new HttpClient());
+builder.Services.AddSingleton(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 
 var app = builder.Build();
 

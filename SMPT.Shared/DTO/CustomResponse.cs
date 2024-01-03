@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMPT.Shared.DTO
 {
-    public class CustomResponse<T>
+    public class CustomResponse<T> where T : class
     {
         public int StatusCode { get; set; }
         public string? Message { get; set; }

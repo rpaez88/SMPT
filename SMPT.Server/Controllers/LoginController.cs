@@ -7,11 +7,11 @@ using SMPT.Server.Domain;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
-using Microsoft.Extensions.Configuration;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 
 namespace SMPT.Server.Controllers
 {
@@ -22,27 +22,14 @@ namespace SMPT.Server.Controllers
         private readonly HttpClient _http;
         private readonly IConfiguration _config;
         private readonly ILogger<LoginController> _logger;
+        private readonly IPasswordHasher<User> _pwHasher;
 
-        public LoginController(ILogger<LoginController> logger, IConfiguration config, HttpClient http)
+        public LoginController(ILogger<LoginController> logger, IConfiguration config, HttpClient http, IPasswordHasher<User> pwHasher)
         {
             _logger = logger;
-            //var builder = new ConfigurationBuilder()
-            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            //Configuration = builder.Build();
             _config = config;
             _http = http;
-        }
-
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
+            _pwHasher = pwHasher;
         }
 
         [HttpPost]
@@ -61,23 +48,22 @@ namespace SMPT.Server.Controllers
                 {
                     if (_http.BaseAddress == null)
                     {
-                        _http.BaseAddress = new Uri(_config.GetValue<string>("SiiauAuthServer") ?? "http://148.202.89.11/d_alum/api/");
+                        _http.BaseAddress = new Uri(_config.GetValue<string>("SiiauAuthServer")!);
                     }
                     _http.DefaultRequestHeaders.Accept.Clear();
                     _http.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                     HttpResponseMessage resp = await _http.PostAsJsonAsync("siiau-validate", credentials);
-                    var content = await resp.Content.ReadFromJsonAsync<JsonObject>();
+                    var siiauUser = await resp.Content.ReadFromJsonAsync<SiiauUserDto>();
                     if (resp.StatusCode == HttpStatusCode.OK)
                     {
-
-                        if (content != null && !content.ContainsKey("respuesta"))
+                        if (siiauUser != null && siiauUser.Respuesta == null)
                         {
-                            content["code"] = credentials.codigo;
-                            content["password"] = credentials.pass;
+                            siiauUser.Codigo = credentials.codigo;
+                            siiauUser.Password = credentials.pass;
 
-                            User UserFromDataBase = CreateOrFindUser(content);
-                            var token = CreateJWT(UserFromDataBase);
+                            User userDb = CreateOrFindUser(siiauUser);
+                            var token = CreateJWT(userDb);
 
                             respApi.StatusCode = (int)HttpStatusCode.OK;
                             respApi.Message = "Inicio de sesión exitoso";
@@ -100,9 +86,9 @@ namespace SMPT.Server.Controllers
             return respApi;
         }
 
-        private static User CreateOrFindUser(JsonObject SiiauUser)
+        private static User CreateOrFindUser(SiiauUserDto SiiauUser)
         {
-            User user = Domain.User.DB().FirstOrDefault(x => x.Code == ((int)SiiauUser["code"]) && x.Password == SiiauUser["password"].ToString());
+            User user = Domain.User.DB().FirstOrDefault(x => x.Code == ((int)SiiauUser.Codigo) && x.Password == SiiauUser.Password.ToString());
 
             return user;
         }
