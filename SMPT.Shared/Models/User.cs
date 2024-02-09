@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using SMPT.Shared.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SMPT.Shared.DTO
+namespace SMPT.Shared.Models
 {
-    public class UserDto
+    public class User
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [AllowNull]
@@ -17,11 +19,14 @@ namespace SMPT.Shared.DTO
 
         [AllowNull]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [AllowNull]
         [MaxLength(30)]
-        public string Username { get; set; }
+        public string? Username { get; set; }
+
+        [AllowNull]
+        public string? Password { get; set; }
 
         [Required]
         public DateTime CreationDate { get; set; }
@@ -32,7 +37,8 @@ namespace SMPT.Shared.DTO
         [Required]
         public int RoleId { get; set; }
 
-        public Role Role { get; set; }
+        [ForeignKey("RoleId")]
+        public required Role Role { get; set; }
 
         [DefaultValue(true)]
         public bool IsActive { get; set; }

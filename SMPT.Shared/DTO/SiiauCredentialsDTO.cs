@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SMPT.Shared.DTO
 {
-    public class SiiauCredentialsDTO
+    public class SiiauCredentialsDto
     {
         public int codigo { get; set; }
         public string? pass { get; set; }

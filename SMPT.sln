@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMPT.Server", "SMPT.Server\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMPT.Shared", "SMPT.Shared\SMPT.Shared.csproj", "{AA1FD800-2645-47E3-83FF-9BC63B265679}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMTP.Entities", "SMTP.Data\SMTP.Entities.csproj", "{E09B42EE-E8B1-4A32-9217-0005E2B47BBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataServices", "DataServices\DataServices.csproj", "{587BAFD8-2ABC-426B-8C62-0C23879793A4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{AA1FD800-2645-47E3-83FF-9BC63B265679}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA1FD800-2645-47E3-83FF-9BC63B265679}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA1FD800-2645-47E3-83FF-9BC63B265679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E09B42EE-E8B1-4A32-9217-0005E2B47BBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E09B42EE-E8B1-4A32-9217-0005E2B47BBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E09B42EE-E8B1-4A32-9217-0005E2B47BBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E09B42EE-E8B1-4A32-9217-0005E2B47BBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{587BAFD8-2ABC-426B-8C62-0C23879793A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{587BAFD8-2ABC-426B-8C62-0C23879793A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{587BAFD8-2ABC-426B-8C62-0C23879793A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{587BAFD8-2ABC-426B-8C62-0C23879793A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

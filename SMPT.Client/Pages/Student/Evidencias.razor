@@ -20,6 +20,7 @@
         <MudDivider Class="mt-4" />
         <MudText Typo="Typo.h6" Class="mt-4">Evidencias</MudText>
         <MudTabs Elevation="1" Centered="true" Rounded="true" PanelClass="pa-6" ApplyEffectsToContainer AlwaysShowScrollButtons="true" Class="mt-3">
+            @* Inglés *@
             <MudTabPanel Text="Inglés">
                 <MudForm class="d-flex flex-column gap-4 w-50">
                     <MudSelect Variant="Variant.Text" Label="Evaluación" Dense="true" Margin="Margin.Dense" T="int">
@@ -39,12 +40,43 @@
                     </MudButton>
                 </MudForm>
             </MudTabPanel>
-
+            @* CENEVAL *@
             <MudTabPanel Text="CENEVAL">
+                 <MudForm class="d-flex flex-column gap-4 w-50">
+                     <MudSelect Variant="Variant.Text" Label="Estado" Dense="true" Margin="Margin.Dense" T="int" Class="mt-1">
+                         <MudSelectItem Value="1">Nueva</MudSelectItem>
+                         <MudSelectItem Value="2">Pendiente</MudSelectItem>
+                         <MudSelectItem Value="3">Aceptada</MudSelectItem>
+                         <MudSelectItem Value="4">Rechazada</MudSelectItem>
+                     </MudSelect>
 
+                     <MudTextField T="string" Label="Ovservaciones" Variant="Variant.Text" Text="@sampleText" Lines="3" Class="mt-2" />
+
+                     <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadFile" Class="mt-2">
+                         <ButtonTemplate>
+                             <MudButton HtmlTag="label"
+                                        Variant="Variant.Filled"
+                                        Color="Color.Primary"
+                                        StartIcon="@Icons.Material.Filled.CloudUpload"
+                                        for="@context">
+                                 Subir evidencia
+                             </MudButton>
+                         </ButtonTemplate>
+                         <SelectedTemplate>
+                             @if (context != null)
+                            {
+                                <MudText Class="mt-2">@context.Name</MudText>
+                            }
+                            else
+                            {
+                                <MudText Class="mt-2">No hay fichero</MudText>
+                            }
+                        </SelectedTemplate>
+                    </MudFileUpload>
+                </MudForm>
             </MudTabPanel>
-
-            <MudTabPanel Text="Servicio social">
+            @* Servicio Social *@
+            <MudTabPanel Text="Servicio Social">
                 <MudForm class="d-flex flex-column gap-4 w-50">
                     <MudSelect Variant="Variant.Text" Label="Estado" Dense="true" Margin="Margin.Dense" T="int" Class="mt-1">
                         <MudSelectItem Value="1">Nueva</MudSelectItem>
@@ -78,11 +110,75 @@
                     </MudFileUpload>
                 </MudForm>
             </MudTabPanel>
-            <MudTabPanel Text="Practica profesional">
+            @* Practica Profesional *@
+            <MudTabPanel Text="Practica Profesional">
+                <MudForm class="d-flex flex-column gap-4 w-50">
+                    <MudSelect Variant="Variant.Text" Label="Estado" Dense="true" Margin="Margin.Dense" T="int" Class="mt-1">
+                        <MudSelectItem Value="1">Nueva</MudSelectItem>
+                        <MudSelectItem Value="2">Pendiente</MudSelectItem>
+                        <MudSelectItem Value="3">Aceptada</MudSelectItem>
+                        <MudSelectItem Value="4">Rechazada</MudSelectItem>
+                    </MudSelect>
 
+                    <MudTextField T="string" Label="Ovservaciones" Variant="Variant.Text" Text="@sampleText" Lines="3" Class="mt-2" />
+
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadFile" Class="mt-2">
+                        <ButtonTemplate>
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                                       for="@context">
+                                Subir evidencia
+                            </MudButton>
+                        </ButtonTemplate>
+                        <SelectedTemplate>
+                            @if (context != null)
+                            {
+                                <MudText Class="mt-2">@context.Name</MudText>
+                            }
+                            else
+                            {
+                                <MudText Class="mt-2">No hay fichero</MudText>
+                            }
+                        </SelectedTemplate>
+                    </MudFileUpload>
+                </MudForm>
             </MudTabPanel>
+            @* Taller *@
             <MudTabPanel Text="Taller">
+                <MudForm class="d-flex flex-column gap-4 w-50">
+                    <MudSelect Variant="Variant.Text" Label="Estado" Dense="true" Margin="Margin.Dense" T="int" Class="mt-1">
+                        <MudSelectItem Value="1">Nueva</MudSelectItem>
+                        <MudSelectItem Value="2">Pendiente</MudSelectItem>
+                        <MudSelectItem Value="3">Aceptada</MudSelectItem>
+                        <MudSelectItem Value="4">Rechazada</MudSelectItem>
+                    </MudSelect>
 
+                    <MudTextField T="string" Label="Ovservaciones" Variant="Variant.Text" Text="@sampleText" Lines="3" Class="mt-2" />
+
+                    <MudFileUpload T="IBrowserFile" Accept=".pdf" FilesChanged="UploadFile" Class="mt-2">
+                        <ButtonTemplate>
+                            <MudButton HtmlTag="label"
+                                       Variant="Variant.Filled"
+                                       Color="Color.Primary"
+                                       StartIcon="@Icons.Material.Filled.CloudUpload"
+                                       for="@context">
+                                Subir evidencia
+                            </MudButton>
+                        </ButtonTemplate>
+                        <SelectedTemplate>
+                            @if (context != null)
+                            {
+                                <MudText Class="mt-2">@context.Name</MudText>
+                            }
+                            else
+                            {
+                                <MudText Class="mt-2">No hay fichero</MudText>
+                            }
+                        </SelectedTemplate>
+                    </MudFileUpload>
+                </MudForm>
             </MudTabPanel>
         </MudTabs>
     </MudCardContent>

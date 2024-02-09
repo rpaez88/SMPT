@@ -23,10 +23,10 @@ namespace SMPT.Client.Services
 
         public async Task<string?> Login(int code, string password)
         {
-            var credentials = new SiiauCredentialsDTO { codigo = code, pass = password };
+            var credentials = new SiiauCredentialsDto { codigo = code, pass = password };
 
             var result = await _http.PostAsJsonAsync("api/login", credentials);
-            var resp = await result.Content.ReadFromJsonAsync<CustomResponse<string?>>();
+            var resp = await result.Content.ReadFromJsonAsync<CustomResponse<string>>();
 
             if (resp != null && resp.StatusCode == (int)HttpStatusCode.OK)
             {

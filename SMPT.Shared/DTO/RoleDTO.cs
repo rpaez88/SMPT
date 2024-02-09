@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SMPT.Shared.DTO
 {
-    public class RoleDTO
+    public class RoleDto
     {
-        public int RoleId { get; set; }
-        public string RoleName { get; set; } = null!;
+        [Required]
+        [MaxLength(30)]
+        public string Name { get; set; }
+
+        [MaxLength(255)]
+        public string Description { get; set; }
     }
 }

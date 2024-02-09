@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SMPT.Shared.DTO;
 using SMPT.Server.Controllers;
-using SMPT.Server.Domain;
+using SMPT.Server.Models;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json.Nodes;
@@ -33,7 +33,7 @@ namespace SMPT.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<CustomResponse<string>> Post([FromBody] SiiauCredentialsDTO credentials)
+        public async Task<CustomResponse<string>> Post([FromBody] SiiauCredentialsDto credentials)
         {
             var respApi = new CustomResponse<string>
             {
@@ -88,7 +88,7 @@ namespace SMPT.Server.Controllers
 
         private static User CreateOrFindUser(SiiauUserDto SiiauUser)
         {
-            User user = Domain.User.DB().FirstOrDefault(x => x.Code == ((int)SiiauUser.Codigo) && x.Password == SiiauUser.Password.ToString());
+            User user = Models.User.DB().FirstOrDefault(x => x.Code == ((int)SiiauUser.Codigo) && x.Password == SiiauUser.Password.ToString());
 
             return user;
         }
@@ -103,9 +103,7 @@ namespace SMPT.Server.Controllers
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim("codigo", UserFromDataBase.Code.ToString()!),
-                new Claim("nombre", UserFromDataBase.Name!),
-                new Claim("tipoUsuario", UserFromDataBase.UserType!),
-                new Claim("status", UserFromDataBase!.Status!),
+                new Claim("nombre", UserFromDataBase.Name!)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));

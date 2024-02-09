@@ -1,4 +1,4 @@
-﻿namespace SMPT.Server.Domain
+﻿namespace SMPT.Server.Models
 {
     public class Jwt
     {
