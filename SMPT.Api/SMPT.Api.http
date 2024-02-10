@@ -1,0 +1,6 @@
+@SMPT.Api_HostAddress = http://localhost:5196
+
+GET {{SMPT.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

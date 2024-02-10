@@ -1,0 +1,24 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
+using SMTP.Entities.DbSet;
+
+namespace SMPT.Entities.DbSet
+{
+    public class Area : BaseEntity
+    {
+        public Area()
+        {
+            Evidences = new HashSet<Evidence>();    
+        }
+
+        [AllowNull]
+        public Guid? ManagerId { get; set; }
+
+        [AllowNull]
+        [ForeignKey("ManagerId")]
+        public virtual User? Manager { get; set; }
+
+        [AllowNull]
+        public virtual ICollection<Evidence>? Evidences { get; set; }
+    }
+}
