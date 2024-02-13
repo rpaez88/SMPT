@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using SMTP.Entities.DbSet;
 
 namespace SMPT.Entities.DbSet
 {
-    public class Evidence
+    public class Evidence : BaseEntity
     {
         [AllowNull]
         public string? Observaciones { get; set; }

@@ -1,0 +1,60 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SMPT.DataServices.Data;
+using SMPT.DataServices.Repository.Interface;
+
+namespace SMPT.DataServices.Repository
+{
+    public class Repository<T> : IRepository<T> where T : class
+    {
+        public readonly ILogger _logger;
+        protected AppDbContext _context;
+        internal DbSet<T> _dbSet;
+
+        public Repository(ILogger logger, AppDbContext context)
+        {
+            _logger = logger;
+            _context = context;
+            _dbSet = context.Set<T>();
+        }
+
+        public virtual async Task<bool> Add(T entity)
+        {
+            await _dbSet.AddAsync(entity);
+            return true;
+        }
+
+        public virtual async Task<bool> Delete(Guid id)
+        {
+            try
+            {
+                var result = await GetById(id);
+                if (result == null)
+                    return false;
+
+                _dbSet.Remove(result);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Delete function", typeof(Repository<T>));
+                throw;
+            }
+        }
+
+        public virtual Task<IEnumerable<T>> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task<T?> GetById(Guid id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public virtual Task<bool> Update(T entity)
+        {
+            throw new NotImplementedException();
+        }
+    }
+}

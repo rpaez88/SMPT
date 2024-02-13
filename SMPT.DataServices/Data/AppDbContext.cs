@@ -5,15 +5,15 @@ namespace SMPT.DataServices.Data
 {
     public class AppDbContext : DbContext
     {
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
-        public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<StudentState> StudentStates { get; set; }
-        public virtual DbSet<Evidence> Evidences { get; set; }
-        public virtual DbSet<EvidenceState> EvidenceStates { get; set; }
-        public virtual DbSet<Area> Areas { get; set; }
-        public virtual DbSet<Career> Careers { get; set; }
-        public virtual DbSet<Cycle> Cycles { get; set; }
+        public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Student> Student { get; set; }
+        public virtual DbSet<StudentState> StudentState { get; set; }
+        public virtual DbSet<Evidence> Evidence { get; set; }
+        public virtual DbSet<EvidenceState> EvidenceState { get; set; }
+        public virtual DbSet<Area> Area { get; set; }
+        public virtual DbSet<Career> Career { get; set; }
+        public virtual DbSet<Cycle> Cycle { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -42,6 +42,59 @@ namespace SMPT.DataServices.Data
                 .HasForeignKey(a => a.StudentId)
                 .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
+
+            var roleAdminId = Guid.NewGuid();
+
+            modelBuilder.Entity<Role>()
+                .HasData(
+                    new
+                    {
+                        Id = roleAdminId,
+                        Name = "Administrador",
+                        Description = "Rol dedicado a la administración de la aplicación.",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Coordinador",
+                        Description = "Rol con privilegios de lectura en toda la aplicación.",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "ResponsableArea",
+                        Description = "Rol con privilegios de lectura y escritura en el área correspondiente de la aplicación.",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Alumno",
+                        Description = "Rol con escritura y lectura en sus datos de evidencias.",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    });
+
+            modelBuilder.Entity<User>()
+                .HasData(
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Code = (long)0,
+                        Email = "cuvalles@udg.mx",
+                        IsActive = true,
+                        Name = "Administrador",
+                        Password = "AQAAAAIAAYagAAAAEKWWe3U/k3WqjRYIdoJfV6stmwBxj4PVGKCDJV6ScS3t0OnFaBx/YNtY5/i7+WGXDw==",//SmptCUV@ll35
+                        RoleId = roleAdminId,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        Username = "smpt-admin"
+                    });
         }
     }
 }
