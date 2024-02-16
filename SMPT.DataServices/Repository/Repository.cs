@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SMPT.DataServices.Data;
 using SMPT.DataServices.Repository.Interface;
 
 namespace SMPT.DataServices.Repository
@@ -8,10 +7,10 @@ namespace SMPT.DataServices.Repository
     public class Repository<T> : IRepository<T> where T : class
     {
         public readonly ILogger _logger;
-        protected AppDbContext _context;
+        protected DbContext _context;
         internal DbSet<T> _dbSet;
 
-        public Repository(ILogger logger, AppDbContext context)
+        public Repository(ILogger logger, DbContext context)
         {
             _logger = logger;
             _context = context;
@@ -42,9 +41,21 @@ namespace SMPT.DataServices.Repository
             }
         }
 
-        public virtual Task<IEnumerable<T>> GetAll()
+        public virtual async Task<IEnumerable<T>> GetAll()
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbSet
+                    .AsNoTracking()
+                    .AsSplitQuery()
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} GetAll function", typeof(Repository<T>));
+                throw;
+            }
+            
         }
 
         public virtual async Task<T?> GetById(Guid id)
