@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using SMTP.Entities.DbSet;
+using System.Text.Json.Serialization;
 
 namespace SMPT.Entities.DbSet
 {
@@ -18,6 +19,7 @@ namespace SMPT.Entities.DbSet
 
         [Required]
         [ForeignKey("StudentId")]
+        [JsonIgnore]
         public virtual required Student Student { get; set; }
 
         [Required]
@@ -25,6 +27,7 @@ namespace SMPT.Entities.DbSet
 
         [Required]
         [ForeignKey("StateId")]
+        [JsonIgnore]
         public virtual required EvidenceState State { get; set; }
 
         [Required]
@@ -32,6 +35,7 @@ namespace SMPT.Entities.DbSet
 
         [Required]
         [ForeignKey("AreaId")]
+        [JsonIgnore]
         public required Area Area { get; set; }
     }
 }

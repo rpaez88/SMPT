@@ -4,18 +4,26 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using SMPT.DataServices.Repository.Interface;
+using SMPT.DataServices.Repository;
+using SMPT.Api.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-var connectionString = builder.Configuration.GetConnectionString("SqlServer");
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("SqlServer");
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddAutoMapper(typeof(MappingConfig));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
+builder.Services.AddScoped<HttpClient>();
 
 //Token configuration
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -41,9 +49,6 @@ builder.Services.AddCors(options =>
             policy.WithOrigins(builder.Configuration["AllowedHosts"]!).AllowAnyMethod().AllowAnyHeader();
         });
 });
-
-builder.Services.AddSingleton(new HttpClient());
-builder.Services.AddSingleton(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
 
 var app = builder.Build();
 

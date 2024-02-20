@@ -5,16 +5,16 @@ using SMPT.DataServices.Repository.Interface;
 
 namespace SMPT.DataServices.Repository
 {
-    public class UnitOfWork : IUnitOfWork
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
 
         private readonly ILogger _logger;
-        private readonly DbContext _context;
+        private readonly AppDbContext _context;
         private Dictionary<Type, object> _repositories;
 
-        public UnitOfWork(ILogger logger, DbContext context)
+        public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger("");
             _context = context;
             _repositories = new Dictionary<Type, object>();
         }
@@ -31,19 +31,16 @@ namespace SMPT.DataServices.Repository
             return repository;
         }
 
-        public async Task<int> CompleteAsync()
+        public async Task<bool> CompleteAsync()
         {
-            return await _context.SaveChangesAsync();
-        }
-
-        public void SaveChanges()
-        {
-            _context.SaveChanges();
+            var result = await _context.SaveChangesAsync();
+            return result > 0;
         }
 
         public void Dispose()
         {
             _context.Dispose();
         }
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace SMPT.Entities.DbSet
 {
@@ -12,24 +13,28 @@ namespace SMPT.Entities.DbSet
             Evidences = new HashSet<Evidence>();
         }
 
-        [Required]
-        public required Guid CycleId { get; set; }
-
-        [Required]
-        [ForeignKey("CycleId")]
-        public required Cycle Cycle { get; set; }
-
-        [Required]
-        public required Guid StateId { get; set; }
-
-        [Required]
-        [ForeignKey("StateId")]
-        public virtual required StudentState State { get; set; }
-
-        [Required]
-        public virtual required ICollection<Career> Careers { get; set; }
+        [AllowNull]
+        public Guid CycleId { get; set; }
 
         [AllowNull]
+        [ForeignKey("CycleId")]
+        [JsonIgnore]
+        public virtual Cycle Cycle { get; set; }
+
+        [AllowNull]
+        public Guid StateId { get; set; }
+
+        [AllowNull]
+        [ForeignKey("StateId")]
+        [JsonIgnore]
+        public virtual StudentState State { get; set; }
+
+        [AllowNull]
+        [JsonIgnore]
+        public virtual ICollection<Career> Careers { get; set; }
+
+        [AllowNull]
+        [JsonIgnore]
         public virtual ICollection<Evidence> Evidences { get; set; }
     }
 }

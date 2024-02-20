@@ -119,12 +119,12 @@ namespace SMPT.Api.Controllers
 
         private static List<User> DB()
         {
-            var roleId = new Guid();
+            var roleId = Guid.NewGuid();
             var list = new List<User>()
             {
                 new User
                 {
-                    Id = new Guid(),
+                    Id = Guid.NewGuid(),
                     Code = 222977415,
                     Name = "Raidel",
                     Password = "raidel1988",

@@ -66,7 +66,7 @@ namespace SMPT.DataServices.Data
                     new
                     {
                         Id = Guid.NewGuid(),
-                        Name = "ResponsableArea",
+                        Name = "Responsable de Área",
                         Description = "Rol con privilegios de lectura y escritura en el área correspondiente de la aplicación.",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
@@ -74,7 +74,7 @@ namespace SMPT.DataServices.Data
                     new
                     {
                         Id = Guid.NewGuid(),
-                        Name = "Alumno",
+                        Name = "Estudiante",
                         Description = "Rol con escritura y lectura en sus datos de evidencias.",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now

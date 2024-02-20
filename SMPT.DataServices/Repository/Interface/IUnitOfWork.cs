@@ -1,6 +1,6 @@
 ﻿namespace SMPT.DataServices.Repository.Interface
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork
     {
         //IAreaRepository Areas { get; }
         //ICareerRepository Careers { get; }
@@ -12,9 +12,7 @@
         //IStudentStateRepository StudentStates { get; }
         //IUserRepository Users { get; }
 
-        Task CompleteAsync();
-
+        Task<bool> CompleteAsync();
         IRepository<T> GetRepository<T>() where T : class;
-        void SaveChanges();
     }
 }
