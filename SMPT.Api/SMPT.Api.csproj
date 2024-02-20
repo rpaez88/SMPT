@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SMPT.DataServices\SMPT.DataServices.csproj" />
-    <ProjectReference Include="..\SMPT.Entities\SMPT.Entities.csproj" />
   </ItemGroup>
 
 </Project>

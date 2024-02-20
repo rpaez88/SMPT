@@ -7,16 +7,35 @@ namespace SMPT.DataServices.Repository
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
+        public IAreaRepository Areas { get; }
+        public ICareerRepository Careers { get; }
+        public ICycleRepository Cycles { get; }
+        public IEvidenceRepository Evidences { get; }
+        public IEvidenceStateRepository EvidenceStates { get; }
+        public IRoleRepository Roles { get; }
+        public IStudentRepository Students { get; }
+        public IStudentStateRepository StudentStates { get; }
+        public IUserRepository Users { get; }
 
         private readonly ILogger _logger;
         private readonly AppDbContext _context;
-        private Dictionary<Type, object> _repositories;
+        private readonly Dictionary<Type, object> _repositories;
 
         public UnitOfWork(AppDbContext context, ILoggerFactory loggerFactory)
         {
             _logger = loggerFactory.CreateLogger("");
             _context = context;
             _repositories = new Dictionary<Type, object>();
+
+            Areas = new AreaRepository(_logger, _context);
+            //Careers = new CareerRepository(_logger, _context);
+            //Cycles = new CycleRepository(_logger, _context);
+            //Evidences = new EvidenceRepository(_logger, _context);
+            //EvidenceStates = new EvidenceStateRepository(_logger, _context);
+            Roles = new RoleRepository(_logger, _context);
+            //Students = new StudentRepository(_logger, _context);
+            //StudentStates = new StudentStateRepository(_logger, _context);
+            Users = new UserRepository(_logger, _context);
         }
 
         public IRepository<T> GetRepository<T>() where T : class

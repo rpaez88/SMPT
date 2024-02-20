@@ -14,9 +14,9 @@ namespace SMPT.Entities.DbSet
             {
                 Id = role.Id,
                 Name = role.Name,
-                Description = role.Description,
-                CreatedDate = role.CreatedDate,
-                UpdatedDate = role.UpdatedDate
+                //Description = role.Description,
+                //CreatedDate = role.CreatedDate,
+                //UpdatedDate = role.UpdatedDate
             };
         }
     }

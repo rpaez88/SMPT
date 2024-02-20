@@ -4,11 +4,11 @@ namespace SMPT.Entities.Dtos
 {
     public class RoleDto
     {
-        public Guid Id;
-        public string Name;
-        public string Description;
-        public DateTime CreatedDate;
-        public DateTime UpdatedDate;
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        //public string Description { get; set; }
+        //public DateTime CreatedDate { get; set; }
+        //public DateTime UpdatedDate { get; set; }
 
         public static explicit operator Role(RoleDto role)
         {
@@ -16,9 +16,9 @@ namespace SMPT.Entities.Dtos
             {
                 Id = role.Id,
                 Name = role.Name,
-                Description = role.Description,
-                CreatedDate = role.CreatedDate,
-                UpdatedDate = role.UpdatedDate
+                //Description = role.Description,
+                //CreatedDate = role.CreatedDate,
+                //UpdatedDate = role.UpdatedDate
             };
         }
     }

@@ -27,15 +27,17 @@ namespace SMPT.Api.Controllers
 
         [HttpGet]
         [Route("{roleId:guid}")]
-        public async Task<IActionResult> GetRole(Guid roleId)
+        public async Task<ActionResult<ApiResponse>> GetRole(Guid roleId)
         {
             var role = await _unitOfWork.GetRepository<Role>().GetById(roleId);
 
             if (role == null)
                 return NotFound("Rol no encontrado");
 
-            var result = (RoleDto)role;//_mapper.Map<RoleDto>(role);
-            return Ok(result);
+            _response.StatusCode = HttpStatusCode.OK;
+            _response.Data = _mapper.Map<RoleDto>(role);
+
+            return Ok(_response);
         }
     }
 }
