@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
-using SMTP.Entities.DbSet;
 
 namespace SMPT.Entities.DbSet
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SMTP.Entities.DbSet
+namespace SMPT.Entities.DbSet
 {
     public class BaseEntity
     {

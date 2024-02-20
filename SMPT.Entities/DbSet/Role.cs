@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using SMTP.Entities.DbSet;
-using SMTP.Entities.Dtos;
+using SMPT.Entities.Dtos;
 
 namespace SMPT.Entities.DbSet
 {

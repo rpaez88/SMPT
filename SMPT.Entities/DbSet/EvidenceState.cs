@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using SMTP.Entities.DbSet;
 
 namespace SMPT.Entities.DbSet
 {

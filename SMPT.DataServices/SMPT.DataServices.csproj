@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SMTP.Entities\SMTP.Entities.csproj" />
+    <ProjectReference Include="..\SMPT.Entities\SMPT.Entities.csproj" />
   </ItemGroup>
 
 </Project>

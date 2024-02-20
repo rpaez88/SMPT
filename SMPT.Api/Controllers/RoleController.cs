@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
-using SMTP.Entities.Dtos;
+using SMPT.Entities.Dtos;
 using System.Net;
 
 namespace SMPT.Api.Controllers
@@ -15,7 +15,7 @@ namespace SMPT.Api.Controllers
 
         [HttpGet]
         [Route("")]
-        public async Task<ActionResult<IEnumerable<RoleDto>>> GetRoles()
+        public async Task<ActionResult<ApiResponse>> GetRoles()
         {
             var roles = await _unitOfWork.GetRepository<Role>().GetAll();
 
@@ -34,7 +34,7 @@ namespace SMPT.Api.Controllers
             if (role == null)
                 return NotFound("Rol no encontrado");
 
-            var result = _mapper.Map<RoleDto>(role);
+            var result = (RoleDto)role;//_mapper.Map<RoleDto>(role);
             return Ok(result);
         }
     }

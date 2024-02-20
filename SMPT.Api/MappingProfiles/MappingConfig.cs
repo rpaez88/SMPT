@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using SMPT.Entities.DbSet;
-using SMTP.Entities.Dtos;
+using SMPT.Entities.Dtos;
 
 namespace SMPT.Api.MappingProfiles
 {

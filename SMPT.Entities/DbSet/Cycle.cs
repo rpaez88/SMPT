@@ -1,5 +1,4 @@
-﻿using SMTP.Entities.DbSet;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace SMPT.Entities.DbSet
