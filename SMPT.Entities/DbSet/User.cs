@@ -12,13 +12,14 @@ namespace SMPT.Entities.DbSet
 
         [AllowNull]
         [EmailAddress]
-        public string? Email { get; set; }
+        public string Email { get; set; }
 
-        [AllowNull]
         [MinLength(8)]
         [DataType(DataType.Password)]
-        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*.()_+]).{8,}$")]
-        public string? Password { get; set; }
+        [RegularExpression(
+            pattern: "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*.()_+]).{8,}$",
+            ErrorMessage = "La contraseña no cumple con los requisitos de seguridad")]
+        public string Password { get; set; }
 
         [Required]
         public required Guid RoleId { get; set; }

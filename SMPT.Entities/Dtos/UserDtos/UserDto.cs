@@ -1,6 +1,6 @@
 ﻿using SMPT.Entities.DbSet;
 
-namespace SMPT.Entities.Dtos
+namespace SMPT.Entities.Dtos.UserDtos
 {
     public class UserDto
     {

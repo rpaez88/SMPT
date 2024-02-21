@@ -55,5 +55,37 @@ namespace SMPT.DataServices.Repository
                 throw;
             }
         }
+
+        public override async Task<bool> Add(User entity)
+        {
+            entity.Id = Guid.NewGuid();
+            entity.CreatedDate = DateTime.Now;
+            entity.UpdatedDate = DateTime.Now;
+            return await base.Add(entity);
+        }
+
+        public override async Task<bool> Update(User entity)
+        {
+            try
+            {
+                var result = await _dbSet.FirstOrDefaultAsync(x => x.Id == entity.Id);
+                if (result == null)
+                    return false;
+
+                result.UpdatedDate = DateTime.Now;
+                result.Name = entity.Name;
+                result.Code = entity.Code;
+                result.Email = entity.Email;
+                result.RoleId = entity.RoleId;
+                result.IsActive = entity.IsActive;
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "{Repo} Update function", typeof(UserRepository));
+                throw;
+            }
+        }
     }
 }

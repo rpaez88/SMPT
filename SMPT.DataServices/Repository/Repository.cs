@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SMPT.DataServices.Repository.Interface;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace SMPT.DataServices.Repository
 {
@@ -61,6 +64,30 @@ namespace SMPT.DataServices.Repository
         public virtual async Task<T?> GetById(Guid id)
         {
             return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<T?> Find(Expression<Func<T, bool>>? filter = null, bool tracked = true)
+        {
+            IQueryable<T> query = _dbSet;
+            if (!tracked)
+            {
+                query = query.AsNoTracking();
+            }
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.FirstOrDefaultAsync();
         }
 
         public virtual Task<bool> Update(T entity)

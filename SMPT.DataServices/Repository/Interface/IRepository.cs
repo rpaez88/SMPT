@@ -1,4 +1,6 @@
-﻿namespace SMPT.DataServices.Repository.Interface
+﻿using System.Linq.Expressions;
+
+namespace SMPT.DataServices.Repository.Interface
 {
     public interface IRepository<T> where T : class
     {
@@ -7,5 +9,8 @@
         Task<bool> Add(T entity);
         Task<bool> Update(T entity);
         Task<bool> Delete(Guid id);
+
+        Task<IEnumerable<T>> FindAll(Expression<Func<T, bool>>? filter = null);
+        Task<T?> Find(Expression<Func<T, bool>>? filter = null, bool tracked = true);
     }
 }

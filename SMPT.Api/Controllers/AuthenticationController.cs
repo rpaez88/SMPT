@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities;
 using SMPT.Entities.DbSet;
 using System.IdentityModel.Tokens.Jwt;
@@ -13,16 +15,22 @@ namespace SMPT.Api.Controllers
 {
     [Route("api/login")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController
     {
         private readonly HttpClient _http;
         private readonly IConfiguration _config;
-        private readonly ILogger<AuthenticationController> _logger;
+        private readonly ILogger _logger;
         private readonly IPasswordHasher<User> _pwHasher;
 
-        public AuthenticationController(ILogger<AuthenticationController> logger, IConfiguration config, HttpClient http, IPasswordHasher<User> pwHasher)
+        public AuthenticationController(
+            IUnitOfWork unitOfWork,
+            IMapper mapper,
+            ILoggerFactory loggerFactory,
+            IConfiguration config,
+            HttpClient http,
+            IPasswordHasher<User> pwHasher) : base(unitOfWork, mapper)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger("Auth");
             _config = config;
             _http = http;
             _pwHasher = pwHasher;
