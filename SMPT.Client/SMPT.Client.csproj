@@ -16,6 +16,6 @@
     <Folder Include="wwwroot\image\logo\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SMPT.Shared\SMPT.Shared.csproj" />
+    <ProjectReference Include="..\SMPT.Entities\SMPT.Entities.csproj" />
   </ItemGroup>
 </Project>

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
-using SMPT.Entities.Dtos.UserDtos;
+using SMPT.Entities.Dtos;
+using SMPT.Entities.Dtos.User;
 using System.Net;
 
 namespace SMPT.Api.Controllers
@@ -38,7 +39,7 @@ namespace SMPT.Api.Controllers
             }
             catch (Exception)
             {
-                InternalServerError();
+                HandleServerError();
             }
             return _response;
         }
@@ -67,7 +68,7 @@ namespace SMPT.Api.Controllers
             }
             catch (Exception)
             {
-                InternalServerError();
+                HandleServerError();
             }
             return _response;
         }
@@ -110,7 +111,7 @@ namespace SMPT.Api.Controllers
 
                 if (!await _unitOfWork.CompleteAsync())
                 {
-                    InternalServerError();
+                    HandleServerError();
                     return BadRequest(_response);
                 }
 
@@ -120,7 +121,7 @@ namespace SMPT.Api.Controllers
             }
             catch (Exception)
             {
-                InternalServerError();
+                HandleServerError();
             }
             return _response;
         }
@@ -171,7 +172,7 @@ namespace SMPT.Api.Controllers
 
                 if (!await _unitOfWork.CompleteAsync())
                 {
-                    InternalServerError();
+                    HandleServerError();
                     return BadRequest(_response);
                 }
 
@@ -179,7 +180,7 @@ namespace SMPT.Api.Controllers
             }
             catch (Exception)
             {
-                InternalServerError();
+                HandleServerError();
             }
             return _response;
         }
@@ -199,13 +200,6 @@ namespace SMPT.Api.Controllers
             {
                 modelState.AddModelError("EmailExist", "Ya existe un usuario con este correo!");
             }
-        }
-
-        private void InternalServerError()
-        {
-            _response.StatusCode = HttpStatusCode.InternalServerError;
-            _response.IsSuccess = false;
-            _response.ErrorMessage = [new KeyValuePair<string, string>("error", "A ocurrido un error en el servidor, intentelo más tarde!")];
         }
     }
 }

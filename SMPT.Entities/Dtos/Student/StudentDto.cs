@@ -1,9 +1,6 @@
 ﻿using SMPT.Entities.DbSet;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
-namespace SMPT.Entities.Dtos.StudentDtos
+namespace SMPT.Entities.Dtos.Student
 {
     public class StudentDto
     {
@@ -12,7 +9,6 @@ namespace SMPT.Entities.Dtos.StudentDtos
         public string Name { get; set; }
         public string Email { get; set; }
         public Guid RoleId { get; set; }
-        public Role Role { get; set; }
         public Guid CycleId { get; set; }
         public Cycle Cycle { get; set; }
         public Guid StateId { get; set; }

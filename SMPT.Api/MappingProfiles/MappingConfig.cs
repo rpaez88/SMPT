@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using SMPT.Entities.DbSet;
-using SMPT.Entities.Dtos;
-using SMPT.Entities.Dtos.UserDtos;
+using SMPT.Entities.Dtos.RoleDtos;
+using SMPT.Entities.Dtos.User;
 
 namespace SMPT.Api.MappingProfiles
 {

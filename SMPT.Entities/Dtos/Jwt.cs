@@ -1,4 +1,4 @@
-﻿namespace SMPT.Entities
+﻿namespace SMPT.Entities.Dtos
 {
     public class Jwt
     {

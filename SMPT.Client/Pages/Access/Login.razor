@@ -1,7 +1,6 @@
 ﻿@page "/login"
 @layout BlankLayout
 
-@using SMPT.Shared;
 @using SMPT.Client.Services;
 
 @inject Blazored.LocalStorage.ILocalStorageService localStorage;
@@ -103,7 +102,7 @@
             isError = false;
             try
             {
-                var token = await loginService.Login(int.Parse(Code), Password);
+                var token = await loginService.Login(long.Parse(Code), Password);
                 if (token != null)
                 {
                     await localStorage.SetItemAsStringAsync("smpt-token", token);

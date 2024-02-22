@@ -1,6 +1,6 @@
-﻿namespace SMPT.Entities
+﻿namespace SMPT.Entities.Dtos
 {
-    public class CarreraDto
+    public class SiiauCareer
     {
         public string CicloIngreso { get; set; }
         public string Escuela { get; set; }

@@ -1,14 +1,14 @@
-﻿namespace SMPT.Entities
+﻿namespace SMPT.Entities.Dtos
 {
-    public class SiiauUserDto
+    public class SiiauUser
     {
         public string Nombre { get; set; }
         public string TipoUsuario { get; set; }
         public string Estatus { get; set; }
-        public CarreraDto[] Carrera { get; set; }
+        public SiiauCareer[] Carrera { get; set; }
         public bool? Respuesta { get; set; }
-        public int? Codigo { get; set; }
-        public string? Password { get; set; }
+        public long? Codigo { get; set; }
+        public string Password { get; set; }
     }
     /*
      {

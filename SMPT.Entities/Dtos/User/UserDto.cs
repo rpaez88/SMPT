@@ -1,6 +1,6 @@
 ﻿using SMPT.Entities.DbSet;
 
-namespace SMPT.Entities.Dtos.UserDtos
+namespace SMPT.Entities.Dtos.User
 {
     public class UserDto
     {
@@ -15,20 +15,20 @@ namespace SMPT.Entities.Dtos.UserDtos
         public DateTime UpdatedDate { get; set; }
 
         //var userDto = (UserDto)user; realizando un casteo utiliza este operador explicito, para mapear
-        public static explicit operator User(UserDto user)
-        {
-            return new User
-            {
-                Id = user.Id,
-                Code = user.Code,
-                Name = user.Name,
-                RoleId = user.Role.Id,
-                Role = user.Role,
-                Email = user.Email,
-                IsActive = user.IsActive,
-                CreatedDate = user.CreatedDate,
-                UpdatedDate = user.UpdatedDate
-            };
-        }
+        //public static explicit operator User(UserDto user)
+        //{
+        //    return new User
+        //    {
+        //        Id = user.Id,
+        //        Code = user.Code,
+        //        Name = user.Name,
+        //        RoleId = user.Role.Id,
+        //        Role = user.Role,
+        //        Email = user.Email,
+        //        IsActive = user.IsActive,
+        //        CreatedDate = user.CreatedDate,
+        //        UpdatedDate = user.UpdatedDate
+        //    };
+        //}
     }
 }

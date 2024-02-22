@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
 using SMPT.Entities.Dtos;
+using SMPT.Entities.Dtos.RoleDtos;
 using System.Net;
 
 namespace SMPT.Api.Controllers

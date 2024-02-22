@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SMPT.Entities.Dtos.UserDtos
+namespace SMPT.Entities.Dtos.User
 {
     public class CreateUserDto
     {
