@@ -8,17 +8,18 @@ namespace SMPT.Entities.DbSet
     {
         public Student()
         {
+            Cycles = new HashSet<Cycle>();
             Careers = new HashSet<Career>();
             Evidences = new HashSet<Evidence>();
         }
 
-        [AllowNull]
-        public Guid CycleId { get; set; }
+        //[AllowNull]
+        //public Guid CycleId { get; set; }
 
-        [AllowNull]
-        [ForeignKey("CycleId")]
-        [JsonIgnore]
-        public virtual Cycle Cycle { get; set; }
+        //[AllowNull]
+        //[ForeignKey("CycleId")]
+        //[JsonIgnore]
+        //public virtual Cycle Cycle { get; set; }
 
         [AllowNull]
         public Guid StateId { get; set; }
@@ -27,6 +28,10 @@ namespace SMPT.Entities.DbSet
         [ForeignKey("StateId")]
         [JsonIgnore]
         public virtual StudentState State { get; set; }
+
+        [AllowNull]
+        [JsonIgnore]
+        public virtual ICollection<Cycle> Cycles { get; set; }
 
         [AllowNull]
         [JsonIgnore]

@@ -5,13 +5,11 @@ using SMPT.Entities.DbSet;
 
 namespace SMPT.DataServices.Repository
 {
-    public class UserRepository : Repository<User>, IUserRepository
+    public class StudentRepository : Repository<Student>, IStudentRepository
     {
-        public UserRepository(ILogger logger, DbContext context) : base(logger, context)
-        {
-        }
+        public StudentRepository(ILogger logger, DbContext context) : base(logger, context) { }
 
-        public override async Task<IEnumerable<User>> GetAll()
+        public override async Task<IEnumerable<Student>> GetAll()
         {
             try
             {
@@ -24,12 +22,12 @@ namespace SMPT.DataServices.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} GetAll function", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} GetAll function", typeof(StudentRepository));
                 throw;
             }
         }
 
-        public override async Task<User?> GetById(Guid id)
+        public override async Task<Student?> GetById(Guid id)
         {
             return await _dbSet.Where(u => u.Id == id)
                 .AsNoTracking()
@@ -51,20 +49,20 @@ namespace SMPT.DataServices.Repository
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Delete function", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Delete function", typeof(StudentRepository));
                 throw;
             }
         }
 
-        //public override async Task<bool> Add(User entity)
-        //{
-        //    entity.Id = Guid.NewGuid();
-        //    entity.CreatedDate = DateTime.Now;
-        //    entity.UpdatedDate = DateTime.Now;
-        //    return await base.Add(entity);
-        //}
+        public override async Task<bool> Add(Student entity)
+        {
+            entity.Id = Guid.NewGuid();
+            entity.CreatedDate = DateTime.Now;
+            entity.UpdatedDate = DateTime.Now;
+            return await base.Add(entity);
+        }
 
-        public override async Task<bool> Update(User entity)
+        public override async Task<bool> Update(Student entity)
         {
             try
             {
@@ -78,12 +76,13 @@ namespace SMPT.DataServices.Repository
                 result.Email = entity.Email;
                 result.RoleId = entity.RoleId;
                 result.IsActive = entity.IsActive;
+                result.StateId = entity.StateId;
 
                 return true;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "{Repo} Update function", typeof(UserRepository));
+                _logger.LogError(ex, "{Repo} Update function", typeof(StudentRepository));
                 throw;
             }
         }

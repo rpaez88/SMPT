@@ -17,6 +17,13 @@ namespace SMPT.DataServices.Data
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            base.ConfigureConventions(configurationBuilder);
+
+            configurationBuilder.Properties<string>().HaveColumnType("nvarchar(200)");
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -28,6 +35,10 @@ namespace SMPT.DataServices.Data
             modelBuilder.Entity<Career>()
                 .HasMany(e => e.Students)
                 .WithMany(d => d.Careers);
+
+            modelBuilder.Entity<Student>()
+                .HasMany(e => e.Cycles)
+                .WithMany(d => d.Students);
 
             modelBuilder.Entity<Evidence>()
                 .HasOne(a => a.Area)
@@ -51,6 +62,7 @@ namespace SMPT.DataServices.Data
                     {
                         Id = roleAdminId,
                         Name = "Administrador",
+                        Alias = "admin",
                         Description = "Rol dedicado a la administración de la aplicación.",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
@@ -59,6 +71,7 @@ namespace SMPT.DataServices.Data
                     {
                         Id = Guid.NewGuid(),
                         Name = "Coordinador",
+                        Alias = "coordinator",
                         Description = "Rol con privilegios de lectura en toda la aplicación.",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
@@ -67,6 +80,7 @@ namespace SMPT.DataServices.Data
                     {
                         Id = Guid.NewGuid(),
                         Name = "Responsable de Área",
+                        Alias = "area-manager",
                         Description = "Rol con privilegios de lectura y escritura en el área correspondiente de la aplicación.",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
@@ -75,7 +89,70 @@ namespace SMPT.DataServices.Data
                     {
                         Id = Guid.NewGuid(),
                         Name = "Estudiante",
+                        Alias = "student",
                         Description = "Rol con escritura y lectura en sus datos de evidencias.",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    });
+
+            modelBuilder.Entity<StudentState>()
+                .HasData(
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Pasante",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Egresado",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Titulado",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Baja",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    });
+
+            modelBuilder.Entity<EvidenceState>()
+                .HasData(
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Nueva",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Aceptada",
+                        Description = "",
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now
+                    },
+                    new
+                    {
+                        Id = Guid.NewGuid(),
+                        Name = "Rechazada",
+                        Description = "",
                         CreatedDate = DateTime.Now,
                         UpdatedDate = DateTime.Now
                     });

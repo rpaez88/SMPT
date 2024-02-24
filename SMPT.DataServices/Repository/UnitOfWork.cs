@@ -28,13 +28,13 @@ namespace SMPT.DataServices.Repository
             _repositories = new Dictionary<Type, object>();
 
             Areas = new AreaRepository(_logger, _context);
-            //Careers = new CareerRepository(_logger, _context);
-            //Cycles = new CycleRepository(_logger, _context);
+            Careers = new CareerRepository(_logger, _context);
+            Cycles = new CycleRepository(_logger, _context);
             //Evidences = new EvidenceRepository(_logger, _context);
             //EvidenceStates = new EvidenceStateRepository(_logger, _context);
             Roles = new RoleRepository(_logger, _context);
-            //Students = new StudentRepository(_logger, _context);
-            //StudentStates = new StudentStateRepository(_logger, _context);
+            Students = new StudentRepository(_logger, _context);
+            StudentStates = new StudentStateRepository(_logger, _context);
             Users = new UserRepository(_logger, _context);
         }
 

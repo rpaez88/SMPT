@@ -8,10 +8,15 @@ namespace SMPT.Entities.DbSet
         public Cycle()
         {
             Careers = new HashSet<Career>();
+            Students = new HashSet<Student>();
         }
 
         [AllowNull]
         [JsonIgnore]
-        public virtual ICollection<Career>? Careers { get; set; }
+        public virtual ICollection<Career> Careers { get; set; }
+
+        [AllowNull]
+        [JsonIgnore]
+        public virtual ICollection<Student> Students { get; set; }
     }
 }

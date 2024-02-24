@@ -4,6 +4,7 @@ using SMPT.DataServices.Repository.Interface;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq;
+using SMPT.Entities.DbSet;
 
 namespace SMPT.DataServices.Repository
 {
@@ -22,6 +23,12 @@ namespace SMPT.DataServices.Repository
 
         public virtual async Task<bool> Add(T entity)
         {
+            if (entity is BaseEntity e)
+            {
+                e.Id = Guid.NewGuid();
+                e.CreatedDate = DateTime.Now;
+                e.UpdatedDate = DateTime.Now;
+            }
             await _dbSet.AddAsync(entity);
             return true;
         }

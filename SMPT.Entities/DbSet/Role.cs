@@ -4,7 +4,11 @@ namespace SMPT.Entities.DbSet
 {
     public class Role: BaseEntity
     {
-        [MaxLength(255)]
+        [Required]
+        [MaxLength(100)]
+        public string Alias { get; set; }
+
+        [MaxLength(200)]
         public string Description { get; set; }
     }
 }
