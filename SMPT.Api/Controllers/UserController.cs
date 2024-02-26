@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using SMPT.Api.Services;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
 using SMPT.Entities.Dtos;
@@ -12,6 +13,7 @@ namespace SMPT.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ServiceFilter(typeof(TokenAuthorizationFilter))]
     public class UserController : BaseController
     {
 

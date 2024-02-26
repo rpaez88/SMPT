@@ -253,23 +253,22 @@ namespace SMPT.Api.Controllers
                     area = await _unitOfWork.Areas.Find(x => x.ManagerId == user.Id);
                 }
             }
-            var token = CreateJWT(user, area, career);
+
             _response.StatusCode = HttpStatusCode.OK;
-            _response.Data = new JwtSecurityTokenHandler().WriteToken(token);
+            _response.Data = CreateJWT(user, area, career);
             return Ok(_response);
         }
 
-        private JwtSecurityToken CreateJWT(User userDb, Area? area = null, Career? career = null)
+        private string CreateJWT(User userDb, Area? area = null, Career? career = null)
         {
             var jwt = _config.GetSection("JWT").Get<Jwt>();
 
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, jwt!.Subject),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                new Claim("code", userDb.Code.ToString()!),
-                new Claim("name", userDb.Name!),
+                new Claim("userId", userDb.Id.ToString()!),
+                new Claim("userCode", userDb.Code.ToString()!),
+                new Claim("userName", userDb.Name!),
                 new Claim("roleName", userDb.Role.Name),
                 new Claim("roleAlias", userDb.Role.Alias),
             };
@@ -286,10 +285,28 @@ namespace SMPT.Api.Controllers
                 claims.Add(new Claim("careerName", career.Name));
             }
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
-            var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken(jwt.Issuer, jwt.Audience, claims, expires: DateTime.Now.AddMinutes(10), signingCredentials: signIn);
-            return token;
+            //var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwt.Key));
+            //var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            //var jwtSecurity = new JwtSecurityToken(
+            //    issuer: jwt.Issuer,
+            //    audience: jwt.Audience,
+            //    claims: claims,
+            //    expires: DateTime.Now.AddMinutes(10),
+            //    signingCredentials: signIn);
+
+            //return new JwtSecurityTokenHandler().WriteToken(jwtSecurity);
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(jwt.Key);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims.ToArray()),
+                Expires = DateTime.UtcNow.AddMinutes(3),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
         }
     }
 }

@@ -7,6 +7,8 @@ using System.Text;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.DataServices.Repository;
 using SMPT.Api.MappingProfiles;
+using SMPT.Api.Services.Interface;
+using SMPT.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IPasswordHasher<>), typeof(PasswordHasher<>));
+builder.Services.AddScoped<TokenAuthorizationFilter>();
 builder.Services.AddScoped<HttpClient>();
 
 //Token configuration
