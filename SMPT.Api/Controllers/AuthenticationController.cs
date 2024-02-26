@@ -81,69 +81,77 @@ namespace SMPT.Api.Controllers
                             //Si es estudiante
                             if (siiauUser.TipoUsuario.Equals("alumno", StringComparison.CurrentCultureIgnoreCase))
                             {
-                                var studentCareers = new List<Career>();
-                                var studentCycles = new List<Cycle>();
+                                //Crear usuario
+                                var studentRole = await _unitOfWork.Roles.Find(x => x.Alias == "student");
+                                var studentUser = new User
+                                {
+                                    Code = (long)siiauUser.Codigo,
+                                    Name = siiauUser.Nombre,
+                                    RoleId = studentRole.Id,
+                                    Role = studentRole,
+                                    Password = siiauUser.Password,
+                                    IsActive = siiauUser.Estatus.Equals("Activo"),
+                                };
+                                studentUser.Password = _passwordHasher.HashPassword(studentUser, studentUser.Password);
+                                await _unitOfWork.Users.Add(studentUser);
+
+                                var studentCareer = new Career();
+                                var studentCycle = new Cycle();
 
                                 //Crear carrera y ciclo si no existen
                                 foreach (var item in siiauUser.Carrera)
                                 {
-                                    var cycleDb = await _unitOfWork.Cycles.Find(x => x.Name == item.CicloIngreso, false);
-                                    var careerDb = await _unitOfWork.Careers.Find(x => x.Name == item.Descripcion, false);
-                                    
-                                    if (careerDb == null)
+                                    studentCycle = await _unitOfWork.Cycles.Find(x => x.Name == item.CicloIngreso);
+                                    studentCareer = await _unitOfWork.Careers.Find(x => x.Name == item.Descripcion);
+
+                                    if (studentCareer == null)
                                     {
-                                        if (cycleDb == null)
+                                        if (studentCycle == null)
                                         {
-                                            cycleDb = new() { Name = item.CicloIngreso };
-                                            studentCycles.Add(cycleDb);
-                                            await _unitOfWork.Cycles.Add(cycleDb);
+                                            studentCycle = new() { Name = item.CicloIngreso };
+                                            await _unitOfWork.Cycles.Add(studentCycle);
                                         }
-                                        
-                                        var career = new Career
+
+                                        studentCareer = new Career
                                         {
                                             Name = item.Descripcion,
-                                            Cycles = new List<Cycle> { cycleDb }
+                                            Cycles = new List<Cycle> { studentCycle }
                                         };
-
-                                        studentCareers.Add(career);
-                                        await _unitOfWork.Careers.Add(career);
+                                        await _unitOfWork.Careers.Add(studentCareer);
                                     }
                                     else
                                     {
-                                        if (cycleDb == null)
+                                        if (studentCycle == null)
                                         {
-                                            cycleDb = new Cycle
+                                            studentCycle = new Cycle
                                             {
                                                 Name = item.Descripcion,
-                                                Careers = new List<Career> { careerDb }
+                                                Careers = new List<Career> { studentCareer }
                                             };
-                                            await _unitOfWork.Cycles.Add(cycleDb);
+                                            await _unitOfWork.Cycles.Add(studentCycle);
                                         }
-
-                                        studentCareers.Add(careerDb);
+                                        else
+                                        {
+                                            var cycleCareersIds = await _unitOfWork.Cycles.GetCareerIds(studentCycle.Id);
+                                            if (cycleCareersIds == null || !cycleCareersIds.Any(x => x == studentCareer.Id))
+                                            {
+                                                studentCycle.Careers.Add(studentCareer);
+                                                await _unitOfWork.Cycles.Update(studentCycle);
+                                            }
+                                        }
                                     }
                                 }
 
-                                //Crear Student(usuario rol = "Estudiante") asignandole los Careers y Cycles
-                                var studentRole = await _unitOfWork.Roles.Find(x => x.Alias == "student");
-                                var graduateState = await _unitOfWork.StudentStates.Find(x => x.Name == "Egresado");
-
+                                //Crear Student asignandole User, Careers y Cycles
+                                var graduateState = await _unitOfWork.StudentStates.Find(x => x.Name == "Egresado", false);
                                 var student = new Student
                                 {
-                                    Code = (long)siiauUser.Codigo,
-                                    Cycles = studentCycles,
-                                    IsActive = siiauUser.Estatus.Equals("Activo"),
+                                    UserId = studentUser.Id,
+                                    CycleId = studentCycle.Id,
                                     Name = siiauUser.Nombre,
-                                    RoleId = studentRole.Id,
-                                    Role = studentRole,
                                     StateId = graduateState.Id,
-                                    State = graduateState,
-                                    Password = siiauUser.Password,
-                                    Careers = studentCareers
+                                    CareerId = studentCareer.Id,
                                 };
-
-                                student.Password = _passwordHasher.HashPassword(student, student.Password);
-
                                 await _unitOfWork.Students.Add(student);
 
                                 if (!await _unitOfWork.CompleteAsync())
@@ -152,7 +160,7 @@ namespace SMPT.Api.Controllers
                                     return BadRequest(_response);
                                 }
 
-                                return await CreateToken(student);
+                                return await CreateToken(student.User);
                             }
 
                             //Si no es estudiante, debe registrarlo el administrador
@@ -231,6 +239,16 @@ namespace SMPT.Api.Controllers
                         case "coordinator":
                             career = await _unitOfWork.Careers.Find(x => x.CoordinatorId == user.Id);
                             break;
+
+                        case "student":
+                        {
+                            var student = await _unitOfWork.Students.Find(x => x.UserId == user.Id);
+                            if (student?.CareerId != null)
+                            {
+                                career = await _unitOfWork.Careers.GetById(student.CareerId ?? user.Id);
+                            }
+                            break;
+                        }
                     }
                     area = await _unitOfWork.Areas.Find(x => x.ManagerId == user.Id);
                 }
@@ -245,22 +263,28 @@ namespace SMPT.Api.Controllers
         {
             var jwt = _config.GetSection("JWT").Get<Jwt>();
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, jwt!.Subject),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
                 new Claim("code", userDb.Code.ToString()!),
                 new Claim("name", userDb.Name!),
-                new Claim("roleName", userDb.Role.Name!),
-                new Claim("roleAlias", userDb.Role.Alias!),
+                new Claim("roleName", userDb.Role.Name),
+                new Claim("roleAlias", userDb.Role.Alias),
             };
 
             if (area != null)
-                claims.Append(new Claim("area", area.Name!));
+            {
+                claims.Add(new Claim("areaId", area.Id.ToString()));
+                claims.Add(new Claim("areaName", area.Name));
+            }
 
             if (career != null)
-                claims.Append(new Claim("career", career.Name!));
+            {
+                claims.Add(new Claim("careerId", career.Id.ToString()));
+                claims.Add(new Claim("careerName", career.Name));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key));
             var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

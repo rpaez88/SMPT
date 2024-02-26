@@ -8,10 +8,10 @@ namespace SMPT.Entities.DbSet
     public class Evidence : BaseEntity
     {
         [AllowNull]
-        public string? Observaciones { get; set; }
+        public string Observaciones { get; set; }
 
         [AllowNull]
-        public string? UrlArchivo { get; set; }
+        public string UrlArchivo { get; set; }
 
         [Required]
         public required Guid StudentId { get; set; }

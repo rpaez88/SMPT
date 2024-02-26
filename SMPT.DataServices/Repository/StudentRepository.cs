@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SMPT.DataServices.Data;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
 
@@ -7,7 +8,7 @@ namespace SMPT.DataServices.Repository
 {
     public class StudentRepository : Repository<Student>, IStudentRepository
     {
-        public StudentRepository(ILogger logger, DbContext context) : base(logger, context) { }
+        public StudentRepository(ILogger logger, AppDbContext context) : base(logger, context) { }
 
         public override async Task<IEnumerable<Student>> GetAll()
         {
@@ -17,7 +18,8 @@ namespace SMPT.DataServices.Repository
                     .AsNoTracking()
                     .AsSplitQuery()
                     .OrderBy(a => a.Name)
-                    .Include(u => u.Role)
+                    .Include(u => u.User)
+                        .ThenInclude(r => r.Role)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -32,7 +34,8 @@ namespace SMPT.DataServices.Repository
             return await _dbSet.Where(u => u.Id == id)
                 .AsNoTracking()
                 .AsSplitQuery()
-                .Include(u => u.Role)
+                .Include(u => u.User)
+                    .ThenInclude(r => r.Role)
                 .FirstOrDefaultAsync();
         }
 
@@ -66,16 +69,18 @@ namespace SMPT.DataServices.Repository
         {
             try
             {
-                var result = await _dbSet.FirstOrDefaultAsync(x => x.Id == entity.Id);
+                var result = await GetById(entity.Id);
                 if (result == null)
                     return false;
 
                 result.UpdatedDate = DateTime.Now;
                 result.Name = entity.Name;
-                result.Code = entity.Code;
-                result.Email = entity.Email;
-                result.RoleId = entity.RoleId;
-                result.IsActive = entity.IsActive;
+                result.User.Name = entity.Name;
+                result.User.Code = entity.User.Code;
+                result.User.Email = entity.User.Email;
+                result.User.RoleId = entity.User.RoleId;
+                result.User.IsActive = entity.User.IsActive;
+                result.User.UpdatedDate = DateTime.Now;
                 result.StateId = entity.StateId;
 
                 return true;

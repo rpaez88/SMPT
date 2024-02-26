@@ -12,8 +12,8 @@ using SMPT.DataServices.Data;
 namespace SMPT.DataServices.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240224092040_second-migration")]
-    partial class secondmigration
+    [Migration("20240225222356_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,41 +40,15 @@ namespace SMPT.DataServices.Migrations
                     b.ToTable("CareerCycle");
                 });
 
-            modelBuilder.Entity("CareerStudent", b =>
-                {
-                    b.Property<Guid>("CareersId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("StudentsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CareersId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("CareerStudent");
-                });
-
-            modelBuilder.Entity("CycleStudent", b =>
-                {
-                    b.Property<Guid>("CyclesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("StudentsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("CyclesId", "StudentsId");
-
-                    b.HasIndex("StudentsId");
-
-                    b.ToTable("CycleStudent");
-                });
-
             modelBuilder.Entity("SMPT.Entities.DbSet.Area", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Alias")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -219,27 +193,27 @@ namespace SMPT.DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3f017e94-8b45-4b3d-8570-d27bae91f354"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9557),
+                            Id = new Guid("9dced51b-4708-48ed-9131-94b0f76f0ec5"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8712),
                             Description = "",
                             Name = "Nueva",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9561)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8714)
                         },
                         new
                         {
-                            Id = new Guid("dafcb2bb-2c76-4636-849e-3e4e361f2cbd"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9573),
+                            Id = new Guid("3506207e-220f-4bae-a912-f06ba8c6d9f6"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8721),
                             Description = "",
                             Name = "Aceptada",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9576)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8723)
                         },
                         new
                         {
-                            Id = new Guid("578b3c6a-4e05-4151-a89c-4fbf97e4c99d"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9587),
+                            Id = new Guid("f7565740-e47a-4027-9d09-60cf062ee605"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8730),
                             Description = "",
                             Name = "Rechazada",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9591)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8732)
                         });
                 });
 
@@ -276,40 +250,82 @@ namespace SMPT.DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("5b11bb5a-0e71-4b2d-b501-22ed7de32e3a"),
+                            Id = new Guid("60d49817-4745-402e-902a-d7e279026946"),
                             Alias = "admin",
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8769),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8069),
                             Description = "Rol dedicado a la administración de la aplicación.",
                             Name = "Administrador",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8806)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8098)
                         },
                         new
                         {
-                            Id = new Guid("853f234a-ac3d-41f2-ae0a-2167bb187a28"),
+                            Id = new Guid("01f7ce23-aade-489c-8278-6a4ee5b3c65a"),
                             Alias = "coordinator",
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8831),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8121),
                             Description = "Rol con privilegios de lectura en toda la aplicación.",
                             Name = "Coordinador",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8835)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8123)
                         },
                         new
                         {
-                            Id = new Guid("0b474721-5dce-415b-b76c-21d7ee44c48a"),
+                            Id = new Guid("d507ef5a-0b98-4c6f-8960-78fd4b03d2bf"),
                             Alias = "area-manager",
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8849),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8130),
                             Description = "Rol con privilegios de lectura y escritura en el área correspondiente de la aplicación.",
                             Name = "Responsable de Área",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8853)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8132)
                         },
                         new
                         {
-                            Id = new Guid("271b2d02-b0c0-4b2b-a963-a416961df8d3"),
+                            Id = new Guid("405fff9b-45c5-4045-afd4-97323675a4ed"),
                             Alias = "student",
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8864),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8139),
                             Description = "Rol con escritura y lectura en sus datos de evidencias.",
                             Name = "Estudiante",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(8868)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8142)
                         });
+                });
+
+            modelBuilder.Entity("SMPT.Entities.DbSet.Student", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CareerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CycleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid?>("StateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CareerId");
+
+                    b.HasIndex("CycleId");
+
+                    b.HasIndex("StateId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Student");
                 });
 
             modelBuilder.Entity("SMPT.Entities.DbSet.StudentState", b =>
@@ -339,35 +355,35 @@ namespace SMPT.DataServices.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("cbf87dd6-776d-4b3e-aefb-92a265e68279"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9214),
+                            Id = new Guid("506b4867-ffe2-483d-9b77-70e64136bc7f"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8503),
                             Description = "",
                             Name = "Pasante",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9219)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8506)
                         },
                         new
                         {
-                            Id = new Guid("26f48afe-d0f2-440a-96ef-111fb8390a53"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9284),
+                            Id = new Guid("3552e990-906d-4b57-b9a4-7027d82d4c38"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8515),
                             Description = "",
                             Name = "Egresado",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9287)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8517)
                         },
                         new
                         {
-                            Id = new Guid("daa6f5bb-ad6f-419f-9111-4a62e920ef01"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9298),
+                            Id = new Guid("3a02215c-62cb-4ab8-bcf6-beb5de690330"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8525),
                             Description = "",
                             Name = "Titulado",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9302)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8526)
                         },
                         new
                         {
-                            Id = new Guid("20db964b-739c-4973-b78c-18a62d712139"),
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9313),
+                            Id = new Guid("f0d4444a-87b5-46cd-8cb5-ae331e3e028b"),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8533),
                             Description = "",
                             Name = "Baja",
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9316)
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8535)
                         });
                 });
 
@@ -382,11 +398,6 @@ namespace SMPT.DataServices.Migrations
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(200)");
@@ -414,35 +425,19 @@ namespace SMPT.DataServices.Migrations
 
                     b.ToTable("User");
 
-                    b.HasDiscriminator<string>("Discriminator").HasValue("User");
-
-                    b.UseTphMappingStrategy();
-
                     b.HasData(
                         new
                         {
-                            Id = new Guid("116ea908-c367-46fe-af50-be26778a89b1"),
+                            Id = new Guid("937ae2ed-fbd7-4625-bdcb-b754f108cd2b"),
                             Code = 0L,
-                            CreatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9800),
+                            CreatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8864),
                             Email = "cuvalles@udg.mx",
                             IsActive = true,
                             Name = "Administrador",
                             Password = "AQAAAAIAAYagAAAAEKWWe3U/k3WqjRYIdoJfV6stmwBxj4PVGKCDJV6ScS3t0OnFaBx/YNtY5/i7+WGXDw==",
-                            RoleId = new Guid("5b11bb5a-0e71-4b2d-b501-22ed7de32e3a"),
-                            UpdatedDate = new DateTime(2024, 2, 24, 3, 20, 36, 860, DateTimeKind.Local).AddTicks(9804)
+                            RoleId = new Guid("60d49817-4745-402e-902a-d7e279026946"),
+                            UpdatedDate = new DateTime(2024, 2, 25, 16, 23, 53, 585, DateTimeKind.Local).AddTicks(8867)
                         });
-                });
-
-            modelBuilder.Entity("SMPT.Entities.DbSet.Student", b =>
-                {
-                    b.HasBaseType("SMPT.Entities.DbSet.User");
-
-                    b.Property<Guid>("StateId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasIndex("StateId");
-
-                    b.HasDiscriminator().HasValue("Student");
                 });
 
             modelBuilder.Entity("CareerCycle", b =>
@@ -456,36 +451,6 @@ namespace SMPT.DataServices.Migrations
                     b.HasOne("SMPT.Entities.DbSet.Cycle", null)
                         .WithMany()
                         .HasForeignKey("CyclesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CareerStudent", b =>
-                {
-                    b.HasOne("SMPT.Entities.DbSet.Career", null)
-                        .WithMany()
-                        .HasForeignKey("CareersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SMPT.Entities.DbSet.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CycleStudent", b =>
-                {
-                    b.HasOne("SMPT.Entities.DbSet.Cycle", null)
-                        .WithMany()
-                        .HasForeignKey("CyclesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SMPT.Entities.DbSet.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -513,7 +478,6 @@ namespace SMPT.DataServices.Migrations
                     b.HasOne("SMPT.Entities.DbSet.Area", "Area")
                         .WithMany("Evidences")
                         .HasForeignKey("AreaId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("SMPT.Entities.DbSet.EvidenceState", "State")
@@ -525,7 +489,6 @@ namespace SMPT.DataServices.Migrations
                     b.HasOne("SMPT.Entities.DbSet.Student", "Student")
                         .WithMany("Evidences")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Area");
@@ -533,6 +496,33 @@ namespace SMPT.DataServices.Migrations
                     b.Navigation("State");
 
                     b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("SMPT.Entities.DbSet.Student", b =>
+                {
+                    b.HasOne("SMPT.Entities.DbSet.Career", "Career")
+                        .WithMany("Students")
+                        .HasForeignKey("CareerId");
+
+                    b.HasOne("SMPT.Entities.DbSet.Cycle", "Cycle")
+                        .WithMany("Students")
+                        .HasForeignKey("CycleId");
+
+                    b.HasOne("SMPT.Entities.DbSet.StudentState", "State")
+                        .WithMany()
+                        .HasForeignKey("StateId");
+
+                    b.HasOne("SMPT.Entities.DbSet.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Career");
+
+                    b.Navigation("Cycle");
+
+                    b.Navigation("State");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SMPT.Entities.DbSet.User", b =>
@@ -546,20 +536,19 @@ namespace SMPT.DataServices.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("SMPT.Entities.DbSet.Student", b =>
-                {
-                    b.HasOne("SMPT.Entities.DbSet.StudentState", "State")
-                        .WithMany()
-                        .HasForeignKey("StateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("State");
-                });
-
             modelBuilder.Entity("SMPT.Entities.DbSet.Area", b =>
                 {
                     b.Navigation("Evidences");
+                });
+
+            modelBuilder.Entity("SMPT.Entities.DbSet.Career", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("SMPT.Entities.DbSet.Cycle", b =>
+                {
+                    b.Navigation("Students");
                 });
 
             modelBuilder.Entity("SMPT.Entities.DbSet.Student", b =>

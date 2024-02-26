@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SMPT.DataServices.Data;
 using SMPT.DataServices.Repository.Interface;
 using SMPT.Entities.DbSet;
 
@@ -7,7 +8,7 @@ namespace SMPT.DataServices.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        public UserRepository(ILogger logger, DbContext context) : base(logger, context)
+        public UserRepository(ILogger logger, AppDbContext context) : base(logger, context)
         {
         }
 
@@ -78,6 +79,7 @@ namespace SMPT.DataServices.Repository
                 result.Email = entity.Email;
                 result.RoleId = entity.RoleId;
                 result.IsActive = entity.IsActive;
+                _dbSet.Update(result);
 
                 return true;
             }

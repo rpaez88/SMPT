@@ -32,26 +32,28 @@ namespace SMPT.DataServices.Data
                 .HasMany(c => c.Cycles)
                 .WithMany(d => d.Careers);
 
-            modelBuilder.Entity<Career>()
-                .HasMany(e => e.Students)
-                .WithMany(d => d.Careers);
+            modelBuilder.Entity<Student>()
+                .HasOne(e => e.Career)
+                .WithMany(d => d.Students)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Student>()
-                .HasMany(e => e.Cycles)
-                .WithMany(d => d.Students);
+                .HasOne(e => e.Cycle)
+                .WithMany(d => d.Students)
+                .OnDelete(DeleteBehavior.ClientSetNull);
 
             modelBuilder.Entity<Evidence>()
                 .HasOne(a => a.Area)
                 .WithMany(a => a.Evidences)
                 .HasForeignKey(a => a.AreaId)
-                .OnDelete(DeleteBehavior.NoAction)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .IsRequired();
 
             modelBuilder.Entity<Evidence>()
                 .HasOne(a => a.Student)
                 .WithMany(a => a.Evidences)
                 .HasForeignKey(a => a.StudentId)
-                .OnDelete(DeleteBehavior.NoAction)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .IsRequired();
 
             var roleAdminId = Guid.NewGuid();
