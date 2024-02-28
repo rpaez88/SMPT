@@ -160,7 +160,7 @@ namespace SMPT.Api.Controllers
                                     return BadRequest(_response);
                                 }
 
-                                return await CreateToken(student.User);
+                                return await CreateToken(studentUser);
                             }
 
                             //Si no es estudiante, debe registrarlo el administrador
@@ -225,34 +225,29 @@ namespace SMPT.Api.Controllers
         {
             Area? area = null;
             Career? career = null;
-            if (user.Role == null)
+            user.Role ??= await _unitOfWork.Roles.GetById(user.RoleId);
+
+            switch (user.Role?.Alias)
             {
-                user.Role = await _unitOfWork.Roles.GetById(user.RoleId);
-                if (user.Role != null)
-                {
-                    switch (user.Role.Alias)
-                    {
-                        case "area-manager":
-                            area = await _unitOfWork.Areas.Find(x => x.ManagerId == user.Id);
-                            break;
-
-                        case "coordinator":
-                            career = await _unitOfWork.Careers.Find(x => x.CoordinatorId == user.Id);
-                            break;
-
-                        case "student":
-                        {
-                            var student = await _unitOfWork.Students.Find(x => x.UserId == user.Id);
-                            if (student?.CareerId != null)
-                            {
-                                career = await _unitOfWork.Careers.GetById(student.CareerId ?? user.Id);
-                            }
-                            break;
-                        }
-                    }
+                case "area-manager":
                     area = await _unitOfWork.Areas.Find(x => x.ManagerId == user.Id);
+                    break;
+
+                case "coordinator":
+                    career = await _unitOfWork.Careers.Find(x => x.CoordinatorId == user.Id);
+                    break;
+
+                case "student":
+                {
+                    var student = await _unitOfWork.Students.Find(x => x.UserId == user.Id);
+                    if (student?.CareerId != null)
+                    {
+                        career = await _unitOfWork.Careers.GetById(student.CareerId ?? user.Id);
+                    }
+                    break;
                 }
             }
+            area = await _unitOfWork.Areas.Find(x => x.ManagerId == user.Id);
 
             _response.StatusCode = HttpStatusCode.OK;
             _response.Data = CreateJWT(user, area, career);
