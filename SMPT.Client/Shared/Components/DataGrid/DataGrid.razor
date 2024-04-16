@@ -21,8 +21,8 @@
         <SelectColumn T="Student" />
         <PropertyColumn Property="x => x != null ? x.Code : 0" Title="Codigo"/>
         <PropertyColumn Property="x => x != null ? x.Name : string.Empty" Title="Nombre" />
-        <PropertyColumn Property="x => x != null ? x.State : string.Empty" Title="Estado" CellStyleFunc="@_cellStyleFunc" />
         <PropertyColumn Property="x => x != null ? x.Course : string.Empty" Title="Curso" />
+        <PropertyColumn Property="x => x != null ? x.State : string.Empty" Title="Estado" CellStyleFunc="@_cellStyleFunc" />
         <TemplateColumn Title="Activo" Sortable="false">
             <CellTemplate>
                 <MudIcon Icon="@(context?.Item?.Active==true ? @Icons.Material.Filled.CheckCircleOutline : @Icons.Material.Filled.HighlightOff)"
@@ -144,12 +144,12 @@
         _loading = true;
         await Task.Delay(2000);
 
-        students.Add(new Student(1, "Efren", "Placensia", "Titulado", "2016 B", true));
-        students.Add(new Student(2, "Josue", "Isaias", "Egresado", "2018 A", true));
-        students.Add(new Student(3, "Tomas", "Lugo", "Pasante", "2021 B", true));
-        students.Add(new Student(6, "Nerina","Peña", "Pasante", "2022 A", true));
-        students.Add(new Student(5, "Raidel","Paez", "Egresado", "2018 A", false));
-        students.Add(new Student(4, "Rodrigo", "Rendesiz", "Egresado", "2017 B", false));
+        students.Add(new Student(1, "Efren", "Placensia", "2016 B", "Titulado", true));
+        students.Add(new Student(2, "Josue", "Isaias", "2018 A", "Egresado", true));
+        students.Add(new Student(3, "Tomas", "Lugo", "2021 B", "Pasante", true));
+        students.Add(new Student(6, "Nerina", "Peña", "2022 A", "Pasante", true));
+        students.Add(new Student(5, "Raidel", "Paez", "2018 A", "Egresado", false));
+        students.Add(new Student(4, "Rodrigo", "Rendesiz", "2017 B", "Egresado", false));
         Elements = students;
 
         _loading = false;
