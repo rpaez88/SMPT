@@ -13,7 +13,7 @@ namespace SMPT.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[ServiceFilter(typeof(TokenAuthorizationFilter))]
+    [ServiceFilter(typeof(TokenAuthorizationFilter))]
     public class UserController : BaseController
     {
 
