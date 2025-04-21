@@ -1,0 +1,15 @@
+﻿services:
+  smpt.api:
+    image: smpt.api
+    build:
+      context: .
+      dockerfile: SMPT.Api/Dockerfile
+
+  smpt.client:
+    image: smpt.client
+    build:
+      context: .
+      dockerfile: SMPT.Client/Dockerfile
+      
+  smpt.db:
+    image: postgres:17.0-alpine3.20

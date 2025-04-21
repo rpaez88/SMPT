@@ -18,12 +18,13 @@
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
         <MudText Typo="Typo.h6" Class="px-4">SMPT CUValles</MudText>
+        @* <MudImage ObjectFit="ObjectFit.Cover" Height="60" Width="270" Src="image/logo-bar.png" Alt="Logo" /> *@
 
         <MudSpacer />
 
-        <MudSwitch Color="Color.Primary" Class="ma-0 mr-n2" T="bool" Checked="@_isDarkMode"
+        <MudSwitch Color="Color.Primary" Class="ma-0 mr-n2" T="bool" Value="@_isDarkMode"
             ThumbIcon="@(_isDarkMode == true ? @Icons.Material.Filled.DarkMode : @Icons.Material.Filled.LightMode)"
-            CheckedChanged="@((e) => ToggleMode(e))"/>
+            ValueChanged="@((e) => ToggleMode(e))" />
 
         <MudMenu Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopRight">
             <MudMenuItem Href="/cuenta" IconSize="Size.Small" Icon="@Icons.Material.Filled.Person" Edge="Edge.Start" Class="item-icon-width">Cuenta</MudMenuItem>
@@ -114,7 +115,7 @@
     }
     public async void logout()
     {
-        await localStorage.RemoveItemAsync("user");
+        await localStorage.RemoveItemAsync("smpt-token");
         Navigation.NavigateTo("/login");
     }
 

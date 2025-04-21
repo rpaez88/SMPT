@@ -1,9 +1,8 @@
-﻿using SMPT.Shared;
-using SMPT.Shared.DTO;
+﻿using SMPT.Entities.Dtos;
+using SMPT.Entities.Dtos.User;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text.Json.Nodes;
+using System.Text.Json;
 
 namespace SMPT.Client.Services
 {
@@ -11,30 +10,26 @@ namespace SMPT.Client.Services
     {
         private readonly HttpClient _http;
 
-        public JsonObject User { get; set; }
-        public string Jwt { get; set; }
+        public UserDto? User { get; set; }
 
         public LoginService(HttpClient http)
         {
             _http = http ?? throw new ArgumentNullException(nameof(http));
-            User = new JsonObject();
-            Jwt = string.Empty;
         }
 
-        public async Task<string?> Login(int code, string password)
+        public async Task<string> Login(long code, string password)
         {
-            var credentials = new SiiauCredentialsDTO { codigo = code, pass = password };
+            var credentials = new SiiauCredentials { Codigo = code, Pass = password };
 
-            var result = await _http.PostAsJsonAsync("api/login", credentials);
-            var resp = await result.Content.ReadFromJsonAsync<CustomResponse<string?>>();
+            var result = await _http.PostAsJsonAsync("login", credentials);
+            var resp = await result.Content.ReadFromJsonAsync<ApiResponse>();
 
-            if (resp != null && resp.StatusCode == (int)HttpStatusCode.OK)
+            if (resp?.StatusCode == HttpStatusCode.OK)
             {
-                Jwt = resp?.Value!;
-                return resp?.Value;
+                return resp.Data.ToString();
             }
-            else
-                throw new Exception(resp?.Message);
+            
+            throw new Exception(resp?.ErrorMessage[0].Value);
         }
 
     }

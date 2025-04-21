@@ -126,6 +126,9 @@ a, .btn-link {
 .w-login {
     width: 60%
 }
+.w-login-form {
+    width: 50%;
+}
 
 .w-40 {
     width: 40%
@@ -134,5 +137,8 @@ a, .btn-link {
 @media (max-width: 960px) {
     .w-login {
         width: 100%;
+    }
+    .w-login-form {
+        width: 75%;
     }
 }
