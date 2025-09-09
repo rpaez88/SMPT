@@ -1,0 +1,40 @@
+name: ${PROJECT_NAME}
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: smpt-sqlserver
+    restart: always
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SQLSERVER_PASSWORD}
+      MSSQL_PID: Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - smpt-sqlserver-data:/var/opt/mssql
+    networks:
+      - smpt-network
+
+  postgres:
+    image: postgres:16
+    container_name: smpt-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - smpt-postgres-data:/var/lib/postgresql/data
+    networks:
+      - smpt-network
+
+networks:
+  smpt-network:
+    driver: bridge
+
+volumes:
+  smpt-sqlserver-data:
+  smpt-postgres-data:

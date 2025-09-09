@@ -1,0 +1,48 @@
+services:
+  sqlserver:
+    environment:
+      - MSSQL_AGENT_ENABLED=true  # Development only
+
+  postgres:
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust  # Development only
+
+  smpt_webapi:
+    build:
+      context: ..
+      dockerfile: SMPT.Api/Dockerfile
+      tags:
+        - "smpt-webapi:latest"    # 👈 Production
+        - "smpt-webapi:dev"       # 👈 Development
+    image: smpt-webapi:dev         # 👈 Currently using dev image
+    container_name: smpt-webapi
+    depends_on:
+      - sqlserver
+      - postgres
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    environment:
+      # 👇 Database configuration
+      - DB_PROVIDER=SqlServer   # 👈 SqlServer or Postgres
+      - ConnectionStrings__SqlServer=Server=sqlserver,1433;Database=${SQLSERVER_DB};User Id=${SQLSERVER_USER};Password=${SQLSERVER_PASSWORD};TrustServerCertificate=True;
+      - ConnectionStrings__Postgres=Host=postgres;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      
+      # 👇 Kestrel certificate configuration
+      - Kestrel__Endpoints__Https__Url=https://+:8081
+      - Kestrel__Endpoints__Https__Certificate__Path=/app/certificates/localhost.pfx
+      - Kestrel__Endpoints__Https__Certificate__Password=${CERT_PASSWORD}
+        
+      # 👇 Other configurations
+      - ASPNETCORE_ENVIRONMENT=Development
+      - DOTNET_USE_POLLING_FILE_WATCHER=1
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    volumes:
+      - ../SMPT.Api/certificates:/app/certificates:ro
+      - dataprotection:/home/app/.aspnet/DataProtection-Keys
+    
+    networks:
+      - smpt-network
+
+volumes:
+  dataprotection:
