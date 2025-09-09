@@ -1,9 +1,21 @@
 services:
-  smtp_webapi:
+  sqlserver:
+    environment:
+      - MSSQL_AGENT_ENABLED=true  # Development only
+
+  postgres:
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust  # Development only
+
+  smpt_webapi:
     build:
       context: ..
       dockerfile: SMPT.Api/Dockerfile
-    container_name: smtp_webapi
+      tags:
+        - "smpt-webapi:latest"    # 👈 Production
+        - "smpt-webapi:dev"       # 👈 Development
+    image: smpt-webapi:dev         # 👈 Currently using dev image
+    container_name: smpt-webapi
     depends_on:
       - sqlserver
       - postgres
@@ -28,6 +40,9 @@ services:
     volumes:
       - ../SMPT.Api/certificates:/app/certificates:ro
       - dataprotection:/home/app/.aspnet/DataProtection-Keys
+    
+    networks:
+      - smpt-network
 
 volumes:
   dataprotection:

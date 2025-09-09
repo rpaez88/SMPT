@@ -1,7 +1,9 @@
+name: ${PROJECT_NAME}
+
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: smpt_sqlserver
+    container_name: smpt-sqlserver
     restart: always
     environment:
       ACCEPT_EULA: "Y"
@@ -10,11 +12,13 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - smpt_sqlserver_data:/var/opt/mssql
+      - smpt-sqlserver-data:/var/opt/mssql
+    networks:
+      - smpt-network
 
   postgres:
     image: postgres:16
-    container_name: smpt_postgres
+    container_name: smpt-postgres
     restart: always
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -23,8 +27,14 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - smpt_postgres_data:/var/lib/postgresql/data
+      - smpt-postgres-data:/var/lib/postgresql/data
+    networks:
+      - smpt-network
+
+networks:
+  smpt-network:
+    driver: bridge
 
 volumes:
-  smpt_sqlserver_data:
-  smpt_postgres_data:
+  smpt-sqlserver-data:
+  smpt-postgres-data:
