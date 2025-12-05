@@ -15,13 +15,26 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var connectionString = builder.Configuration.GetConnectionString("PostgresSql");
-// builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+var dbProvider = Environment.GetEnvironmentVariable("DB_PROVIDER") ?? "SqlServer";
+var connectionString = builder.Configuration.GetConnectionString(dbProvider);
+
+switch (dbProvider)
+{
+    case "SqlServer":
+        builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+        break;
+    case "Postgres":
+        builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+        break;
+    default:
+        throw new InvalidOperationException($"Database provider not supported: {dbProvider}");
+}
+
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -45,16 +58,38 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 //Cors Configuration
-builder.Services.AddCors(options =>
+/*builder.Services.AddCors(options =>
 {
     options.AddPolicy("corspolicy",
         policy =>
         {
             policy.WithOrigins(builder.Configuration["AllowedHosts"]!).AllowAnyMethod().AllowAnyHeader();
         });
+});*/
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("corspolicy", policy =>
+    {
+        var origins = builder.Configuration
+            .GetSection("Cors:AllowedOrigins")
+            .Get<string[]>();
+
+        policy.WithOrigins(origins!)
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
 });
 
+builder.WebHost.ConfigureKestrel((context, options) => {});
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate(); // Apply migrations automatically
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -64,13 +99,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("corspolicy");
-
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
